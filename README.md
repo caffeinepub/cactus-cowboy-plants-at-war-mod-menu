@@ -1,2 +1,3 @@
-# cactus-cowboy-plants-at-war-mod-menu
-Exported from Caffeine project: Make the app runnable on Meta Quest 3S (Quest Browser + Android APK/TWA)
+## 
+
+To run app build and run docker image: `docker build -t app . docker run -it --network host app`

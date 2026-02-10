@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Project now includes making the app compatible with Meta Quest 3S VR.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-add-explicit-meta-quest-3s-support-guidance-in-the-ui-covering-both-a-running-the-app-in-the-meta-quest-oculus-quest-browser-as-a-pwa-and-b-installing-running-the-android-apk-wrapper-on-quest-android-where-applicable",
+      "title": "Add explicit Meta Quest 3S support guidance in the UI, covering both (a) running the app in the Meta Quest (Oculus/Quest) Browser as a PWA and (b) installing/running the Android APK wrapper on Quest (Android) where applicable.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-existing-apk-download-experience-to-be-accurate-for-meta-quest-android-devices-remove-samsung-only-wording-and-replace-it-with-wording-that-includes-meta-quest-headsets-as-supported-android-devices-where-relevant",
+      "title": "Update the existing APK download experience to be accurate for Meta Quest (Android) devices: remove Samsung-only wording and replace it with wording that includes Meta Quest headsets as supported Android devices where relevant.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-embedded-apk-build-instructions-shown-in-the-in-app-build-overlay-to-include-a-meta-quest-3s-section-quest-specific-install-run-notes-without-removing-the-existing-bubblewrap-twa-steps",
+      "title": "Extend the embedded APK build instructions shown in the in-app build overlay to include a Meta Quest 3S section (Quest-specific install/run notes) without removing the existing Bubblewrap/TWA steps.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-improve-runtime-environment-detection-so-the-app-can-recognize-meta-quest-browser-sessions-and-show-quest-relevant-messaging-e-g-treat-quest-browser-as-android-capable-for-the-app-launcher-panel-messaging-and-optionally-show-quest-detected-helper-text",
+      "title": "Improve runtime environment detection so the app can recognize Meta Quest Browser sessions and show Quest-relevant messaging (e.g., treat Quest Browser as Android-capable for the App Launcher panel messaging, and optionally show 'Quest detected' helper text).",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-app-is-comfortable-and-usable-in-a-vr-browser-context-by-adding-vr-friendly-layout-accessibility-adjustments-larger-readable-base-text-safe-tap-click-targets-and-avoiding-interaction-blockers-while-preserving-the-current-overall-layout-and-feature-set",
+      "title": "Ensure the app is comfortable and usable in a VR browser context by adding VR-friendly layout/accessibility adjustments (larger readable base text, safe tap/click targets, and avoiding interaction blockers) while preserving the current overall layout and feature set.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-confirm-appropriate-viewport-metadata-for-mobile-vr-browsers-in-the-html-shell-so-the-ui-scales-correctly-on-meta-quest-browser",
+      "title": "Add/confirm appropriate viewport metadata for mobile/VR browsers in the HTML shell so the UI scales correctly on Meta Quest Browser.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add support/compatibility so the app can run on Meta Quest 3S VR",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Make the app runnable on Meta Quest 3S (Quest Browser + Android APK/TWA)",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,124 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-add-explicit-meta-quest-3s-support-guidance-in-the-ui-covering-both-a-running-the-app-in-the-meta-quest-oculus-quest-browser-as-a-pwa-and-b-installing-running-the-android-apk-wrapper-on-quest-android-where-applicable",
+      "featureTitle": "Add explicit Meta Quest 3S support guidance in the UI, covering both (a) running the app in the Meta Quest (Oculus/Quest) Browser as a PWA and (b) installing/running the Android APK wrapper on Quest (Android) where applicable.",
+      "files": [
+        "frontend/src/components/DownloadsPanel.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-existing-apk-download-experience-to-be-accurate-for-meta-quest-android-devices-remove-samsung-only-wording-and-replace-it-with-wording-that-includes-meta-quest-headsets-as-supported-android-devices-where-relevant",
+      "featureTitle": "Update the existing APK download experience to be accurate for Meta Quest (Android) devices: remove Samsung-only wording and replace it with wording that includes Meta Quest headsets as supported Android devices where relevant.",
+      "files": [
+        "frontend/src/components/DownloadsPanel.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-extend-the-embedded-apk-build-instructions-shown-in-the-in-app-build-overlay-to-include-a-meta-quest-3s-section-quest-specific-install-run-notes-without-removing-the-existing-bubblewrap-twa-steps",
+      "featureTitle": "Extend the embedded APK build instructions shown in the in-app build overlay to include a Meta Quest 3S section (Quest-specific install/run notes) without removing the existing Bubblewrap/TWA steps.",
+      "files": [
+        "frontend/ANDROID_APK_BUILD.md",
+        "frontend/src/components/ApkBuildInstructionsOverlay.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-improve-runtime-environment-detection-so-the-app-can-recognize-meta-quest-browser-sessions-and-show-quest-relevant-messaging-e-g-treat-quest-browser-as-android-capable-for-the-app-launcher-panel-messaging-and-optionally-show-quest-detected-helper-text",
+      "featureTitle": "Improve runtime environment detection so the app can recognize Meta Quest Browser sessions and show Quest-relevant messaging (e.g., treat Quest Browser as Android-capable for the App Launcher panel messaging, and optionally show 'Quest detected' helper text).",
+      "files": [
+        "frontend/src/components/AppToAppLauncherPanel.tsx",
+        "frontend/src/components/DownloadsPanel.tsx",
+        "frontend/src/hooks/useRuntimeEnv.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-app-is-comfortable-and-usable-in-a-vr-browser-context-by-adding-vr-friendly-layout-accessibility-adjustments-larger-readable-base-text-safe-tap-click-targets-and-avoiding-interaction-blockers-while-preserving-the-current-overall-layout-and-feature-set",
+      "featureTitle": "Ensure the app is comfortable and usable in a VR browser context by adding VR-friendly layout/accessibility adjustments (larger readable base text, safe tap/click targets, and avoiding interaction blockers) while preserving the current overall layout and feature set.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
+        "frontend/src/index.css"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-confirm-appropriate-viewport-metadata-for-mobile-vr-browsers-in-the-html-shell-so-the-ui-scales-correctly-on-meta-quest-browser",
+      "featureTitle": "Add/confirm appropriate viewport metadata for mobile/VR browsers in the HTML shell so the UI scales correctly on Meta Quest Browser.",
+      "files": [
+        "frontend/index.html"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
