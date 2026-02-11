@@ -1,14 +1,14 @@
 {
-  "name": "Cactus Cowboy: Plants at War Mod Menu",
-  "short_name": "Cactus Cowboy",
-  "description": "Enhanced mod menu for Cactus Cowboy: Plants at War VR game with prefab catalog, APK support, and app-to-app launcher",
+  "name": "Web Browser",
+  "short_name": "Browser",
+  "description": "A simple web browser for navigating websites",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
-  "background_color": "#f5ede4",
-  "theme_color": "#d4a574",
+  "background_color": "#fafafa",
+  "theme_color": "#3b82f6",
   "orientation": "any",
-  "categories": ["games", "utilities"],
+  "categories": ["utilities"],
   "icons": [
     {
       "src": "/assets/generated/pwa-icon-192.dim_192x192.png",
@@ -31,9 +31,9 @@
   ],
   "shortcuts": [
     {
-      "name": "Mod Menu",
-      "short_name": "Mods",
-      "description": "Open the mod menu",
+      "name": "Browser",
+      "short_name": "Browse",
+      "description": "Open the web browser",
       "url": "/",
       "icons": [
         {

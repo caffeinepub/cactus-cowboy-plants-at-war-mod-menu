@@ -2,10 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-explicit-meta-quest-3s-support-guidance-in-the-ui-covering-both-a-running-the-app-in-the-meta-quest-oculus-quest-browser-as-a-pwa-and-b-installing-running-the-android-apk-wrapper-on-quest-android-where-applicable",
-      "featureTitle": "Add explicit Meta Quest 3S support guidance in the UI, covering both (a) running the app in the Meta Quest (Oculus/Quest) Browser as a PWA and (b) installing/running the Android APK wrapper on Quest (Android) where applicable.",
+      "featureId": "feature-replace-the-current-mod-menu-authenticated-ui-with-a-laptop-only-2d-web-browser-style-interface-that-can-load-external-websites-inside-an-iframe-including-a-url-bar-and-basic-navigation-controls-back-forward-reload-go",
+      "featureTitle": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
       "files": [
-        "frontend/src/components/DownloadsPanel.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/hooks/useBrowserHistory.ts",
+        "frontend/src/pages/BrowserPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -21,10 +23,15 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-existing-apk-download-experience-to-be-accurate-for-meta-quest-android-devices-remove-samsung-only-wording-and-replace-it-with-wording-that-includes-meta-quest-headsets-as-supported-android-devices-where-relevant",
-      "featureTitle": "Update the existing APK download experience to be accurate for Meta Quest (Android) devices: remove Samsung-only wording and replace it with wording that includes Meta Quest headsets as supported Android devices where relevant.",
+      "featureId": "feature-ensure-the-app-has-no-vr-mode-and-does-not-show-vr-quest-apk-mod-menu-ui-elements-the-experience-must-be-laptop-only-2d",
+      "featureTitle": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
       "files": [
-        "frontend/src/components/DownloadsPanel.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
+        "frontend/src/components/AppToAppLauncherPanel.tsx",
+        "frontend/src/components/DownloadsPanel.tsx",
+        "frontend/src/index.css",
+        "frontend/src/pages/ModMenuPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -40,11 +47,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-extend-the-embedded-apk-build-instructions-shown-in-the-in-app-build-overlay-to-include-a-meta-quest-3s-section-quest-specific-install-run-notes-without-removing-the-existing-bubblewrap-twa-steps",
-      "featureTitle": "Extend the embedded APK build instructions shown in the in-app build overlay to include a Meta Quest 3S section (Quest-specific install/run notes) without removing the existing Bubblewrap/TWA steps.",
+      "featureId": "feature-update-the-app-s-shell-branding-to-match-the-laptop-web-browser-experience-html-title-and-pwa-manifest-name-description",
+      "featureTitle": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
       "files": [
-        "frontend/ANDROID_APK_BUILD.md",
-        "frontend/src/components/ApkBuildInstructionsOverlay.tsx"
+        "frontend/index.html",
+        "frontend/public/manifest.webmanifest"
       ],
       "components": [
         "authorization@4.0.0",
@@ -60,12 +67,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-improve-runtime-environment-detection-so-the-app-can-recognize-meta-quest-browser-sessions-and-show-quest-relevant-messaging-e-g-treat-quest-browser-as-android-capable-for-the-app-launcher-panel-messaging-and-optionally-show-quest-detected-helper-text",
-      "featureTitle": "Improve runtime environment detection so the app can recognize Meta Quest Browser sessions and show Quest-relevant messaging (e.g., treat Quest Browser as Android-capable for the App Launcher panel messaging, and optionally show 'Quest detected' helper text).",
+      "featureId": "feature-apply-a-coherent-visual-theme-suitable-for-a-laptop-web-browser-ui-colors-typography-spacing-component-styling-and-use-it-consistently-across-the-browser-page",
+      "featureTitle": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
       "files": [
-        "frontend/src/components/AppToAppLauncherPanel.tsx",
-        "frontend/src/components/DownloadsPanel.tsx",
-        "frontend/src/hooks/useRuntimeEnv.ts"
+        "frontend/src/index.css",
+        "frontend/src/pages/BrowserPage.tsx",
+        "frontend/tailwind.config.js"
       ],
       "components": [
         "authorization@4.0.0",
@@ -77,46 +84,6 @@
       ],
       "testIds": [
         "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-app-is-comfortable-and-usable-in-a-vr-browser-context-by-adding-vr-friendly-layout-accessibility-adjustments-larger-readable-base-text-safe-tap-click-targets-and-avoiding-interaction-blockers-while-preserving-the-current-overall-layout-and-feature-set",
-      "featureTitle": "Ensure the app is comfortable and usable in a VR browser context by adding VR-friendly layout/accessibility adjustments (larger readable base text, safe tap/click targets, and avoiding interaction blockers) while preserving the current overall layout and feature set.",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-        "frontend/src/index.css"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-confirm-appropriate-viewport-metadata-for-mobile-vr-browsers-in-the-html-shell-so-the-ui-scales-correctly-on-meta-quest-browser",
-      "featureTitle": "Add/confirm appropriate viewport metadata for mobile/VR browsers in the HTML shell so the UI scales correctly on Meta Quest Browser.",
-      "files": [
-        "frontend/index.html"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
       ],
       "confidence": "high"
     }

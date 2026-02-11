@@ -1,14 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Make the app runnable and comfortable to use on Meta Quest 3S by adding Quest-specific guidance, accurate Android/APK wording, Quest-aware environment detection, and VR-browser-friendly UI scaling.
+**Goal:** Replace the current mod-menu/authenticated experience with a laptop-only 2D web-browser-style UI that loads websites in an iframe.
 
 **Planned changes:**
-- Add a clearly labeled UI section (or extend existing Downloads/instructions) that mentions Meta Quest 3S by name and explains running the app via Quest Browser as a PWA, plus the Android APK/TWA wrapper option and prerequisites (HTTPS + `/manifest.webmanifest`).
-- Update Downloads panel APK messaging to remove any Samsung-only wording and explicitly include Meta Quest headsets as supported Android devices, keeping the APK link path `/assets/apk/cactus-cowboy-mod-menu.apk` unchanged.
-- Extend the in-app build instructions overlay with a distinct “Meta Quest 3S / Quest (Android) Notes” section while keeping the existing Bubblewrap/TWA steps intact.
-- Improve client-side runtime detection to recognize Quest Browser sessions and show Quest-relevant messaging (avoid misleading “not Android” warnings; provide clear guidance when a feature is unsupported).
-- Add VR-friendly layout/accessibility adjustments for Quest Browser (readable base text, safe tap targets, reliable scrolling and unclipped UI) without changing the overall feature set.
-- Add/confirm appropriate viewport metadata in the HTML shell so the UI scales correctly in mobile/VR browsers like Quest Browser.
+- Remove/replace the existing mod-menu/VR/authentication-first UI flow with a desktop/laptop browser page as the primary experience.
+- Add a browser-like top bar with URL input and controls: Back, Forward, Reload, and Go (Enter key supported).
+- Implement app-managed navigation history for URLs entered in the URL bar (Back/Forward), and reload the current iframe URL on demand.
+- Normalize entered addresses by prepending `https://` when the protocol is missing.
+- Update app shell branding to match the new browser experience (HTML document title and PWA manifest name/short_name/description).
+- Apply a consistent visual theme across the browser UI (colors, typography, spacing) and ensure responsive layout for typical laptop widths.
 
-**User-visible outcome:** Users on Meta Quest 3S can open the app in Quest Browser with clear on-screen instructions, see accurate Android/APK download guidance that includes Quest devices, and use a VR-friendly UI that scales and behaves correctly in the headset browser.
+**User-visible outcome:** On a laptop/desktop browser, users see a simple web-browser interface with a URL bar and navigation buttons, can load sites in an iframe, and can go back/forward/reload within their entered-URL history—without any VR/mod-menu/authentication UI.

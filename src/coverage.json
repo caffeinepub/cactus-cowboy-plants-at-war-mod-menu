@@ -1,90 +1,77 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T04:29:05.358Z",
+  "generatedAt": "2026-02-10T21:42:56.431Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 6,
+    "total": 4,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Add explicit Meta Quest 3S support guidance in the UI, covering both (a) running the app in the Meta Quest (Oculus/Quest) Browser as a PWA and (b) installing/running the Android APK wrapper on Quest (Android) where applicable.",
+        "summary": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DownloadsPanel.tsx",
-          "frontend/src/pages/ModMenuPage.tsx"
+          "frontend/src/pages/BrowserPage.tsx",
+          "frontend/src/hooks/useBrowserHistory.ts",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DownloadsPanel.tsx"
+          "frontend/src/pages/BrowserPage.tsx",
+          "frontend/src/hooks/useBrowserHistory.ts",
+          "frontend/src/App.tsx"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Update the existing APK download experience to be accurate for Meta Quest (Android) devices: remove Samsung-only wording and replace it with wording that includes Meta Quest headsets as supported Android devices where relevant.",
+        "summary": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/DownloadsPanel.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/index.css",
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/components/DownloadsPanel.tsx",
+          "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
+          "frontend/src/components/AppToAppLauncherPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/DownloadsPanel.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/index.css",
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/components/DownloadsPanel.tsx",
+          "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
+          "frontend/src/components/AppToAppLauncherPanel.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Extend the embedded APK build instructions shown in the in-app build overlay to include a Meta Quest 3S section (Quest-specific install/run notes) without removing the existing Bubblewrap/TWA steps.",
+        "summary": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "frontend/ANDROID_APK_BUILD.md"
+          "frontend/index.html",
+          "frontend/public/manifest.webmanifest"
         ],
         "matchedFiles": [
-          "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "frontend/ANDROID_APK_BUILD.md"
+          "frontend/index.html",
+          "frontend/public/manifest.webmanifest"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Improve runtime environment detection so the app can recognize Meta Quest Browser sessions and show Quest-relevant messaging (e.g., treat Quest Browser as Android-capable for the App Launcher panel messaging, and optionally show 'Quest detected' helper text).",
+        "summary": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useRuntimeEnv.ts",
-          "frontend/src/components/AppToAppLauncherPanel.tsx",
-          "frontend/src/components/DownloadsPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useRuntimeEnv.ts",
-          "frontend/src/components/AppToAppLauncherPanel.tsx",
-          "frontend/src/components/DownloadsPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Ensure the app is comfortable and usable in a VR browser context by adding VR-friendly layout/accessibility adjustments (larger readable base text, safe tap/click targets, and avoiding interaction blockers) while preserving the current overall layout and feature set.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/App.tsx",
           "frontend/src/index.css",
-          "frontend/src/components/ApkBuildInstructionsOverlay.tsx"
+          "frontend/tailwind.config.js",
+          "frontend/src/pages/BrowserPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx",
           "frontend/src/index.css",
-          "frontend/src/components/ApkBuildInstructionsOverlay.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Add/confirm appropriate viewport metadata for mobile/VR browsers in the HTML shell so the UI scales correctly on Meta Quest Browser.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/index.html"
-        ],
-        "matchedFiles": [
-          "frontend/index.html"
+          "frontend/tailwind.config.js",
+          "frontend/src/pages/BrowserPage.tsx"
         ]
       }
     ]
@@ -94,14 +81,17 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/ANDROID_APK_BUILD.md",
     "frontend/index.html",
+    "frontend/public/manifest.webmanifest",
     "frontend/src/App.tsx",
     "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
     "frontend/src/components/AppToAppLauncherPanel.tsx",
     "frontend/src/components/DownloadsPanel.tsx",
-    "frontend/src/hooks/useRuntimeEnv.ts",
+    "frontend/src/hooks/useBrowserHistory.ts",
     "frontend/src/index.css",
+    "frontend/src/pages/BrowserPage.tsx",
+    "frontend/src/pages/ModMenuPage.tsx",
+    "frontend/tailwind.config.js",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

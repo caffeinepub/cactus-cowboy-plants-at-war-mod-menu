@@ -55,22 +55,6 @@ export default {
                     3: 'oklch(var(--chart-3))',
                     4: 'oklch(var(--chart-4))',
                     5: 'oklch(var(--chart-5))'
-                },
-                // Desert theme colors
-                sand: {
-                    light: 'oklch(0.96 0.02 45)',
-                    DEFAULT: 'oklch(0.88 0.05 45)',
-                    dark: 'oklch(0.65 0.15 45)'
-                },
-                terracotta: {
-                    light: 'oklch(0.70 0.12 35)',
-                    DEFAULT: 'oklch(0.55 0.18 35)',
-                    dark: 'oklch(0.45 0.15 35)'
-                },
-                cactus: {
-                    light: 'oklch(0.70 0.15 140)',
-                    DEFAULT: 'oklch(0.55 0.18 140)',
-                    dark: 'oklch(0.40 0.15 140)'
                 }
             },
             borderRadius: {
@@ -80,7 +64,7 @@ export default {
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                desert: '0 4px 12px rgba(139, 90, 43, 0.15)'
+                subtle: '0 2px 8px rgba(0,0,0,0.08)'
             },
             keyframes: {
                 'accordion-down': {

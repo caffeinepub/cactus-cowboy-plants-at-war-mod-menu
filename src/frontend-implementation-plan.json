@@ -1,130 +1,119 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Meta Quest 3S runnable support (Quest Browser PWA + Android APK/TWA) — frontend updates",
+  "title": "Laptop-only 2D web browser UI (URL bar + iframe navigation)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add in-app Meta Quest 3S guidance for running via Quest Browser (PWA) and via Android APK/TWA wrapper.",
+      "summary": "Implement a desktop/laptop 2D browser-like UI with URL bar, iframe navigation, and app-managed history controls.",
       "acceptanceCriteria": [
-        "The app UI contains a clearly labeled section (or additions to existing Downloads / instructions UI) that mentions Meta Quest 3S by name and explains how to open the app in Quest Browser.",
-        "The guidance also explains the Android APK/TWA option in Quest terms (Android-based headset), including the prerequisite that the web app must be reachable via HTTPS and the manifest must be accessible at /manifest.webmanifest.",
+        "App renders a browser-like layout on desktop/laptop screens with a top navigation bar and a main content area.",
+        "URL input supports entering a domain or full URL; if protocol is missing, the app prepends https:// before loading.",
+        "Clicking Go (or pressing Enter in the URL bar) loads the requested URL in an iframe.",
+        "Back/Forward navigate through the app-managed history of visited URLs (those entered via the URL bar).",
+        "Reload re-loads the currently displayed URL in the iframe.",
         "All user-facing text is in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/DownloadsPanel.tsx",
-          "operation": "modify",
-          "description": "Add a clearly labeled \"Meta Quest 3S / Quest\" guidance section within the existing Downloads UI explaining: (a) using the Quest Browser to open the app and optionally install as a PWA, and (b) the APK/TWA wrapper option for Quest (Android-based), explicitly stating prerequisites: HTTPS reachability and manifest availability at /manifest.webmanifest. Keep guidance in English and keep the existing APK link path unchanged."
+          "path": "frontend/src/pages/BrowserPage.tsx",
+          "operation": "create",
+          "description": "Create the primary laptop-only 2D browser page: top chrome (Back/Forward/Reload, URL input, Go) and a main iframe area. Use shadcn/ui components (e.g., Button, Input) to build the chrome controls; verify the component's usage instructions before implementing. Implement URL normalization (prepend https:// when protocol missing), Enter-to-Go, app-managed history stack, and Reload via iframe remount/key update without altering the URL."
         },
         {
-          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "path": "frontend/src/hooks/useBrowserHistory.ts",
+          "operation": "create",
+          "description": "Add a small hook to manage app-level navigation state: current URL, back/forward stacks, and helper actions (go/back/forward/reload trigger). Keep it isolated to frontend state (no authentication, no backend calls)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Ensure the updated DownloadsPanel (with Meta Quest guidance) remains visible and reachable within the main Mod Menu page layout (no new routes/pages introduced)."
+          "description": "Wire the new BrowserPage into the app as the primary UI (replace current AuthGate + ModMenuPage render). Ensure the BrowserPage is the default rendered view so it is reachable with no additional navigation steps."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Update APK download copy to include Meta Quest as a supported Android device and remove Samsung-only wording while keeping the same APK path.",
+      "summary": "Remove VR/Quest/APK/mod-menu/authentication gating from the primary UI so the experience is laptop-only 2D.",
       "acceptanceCriteria": [
-        "In the Downloads panel, the APK availability description does not state or imply 'Samsung-only' compatibility.",
-        "The Downloads panel copy mentions Android devices and explicitly includes Meta Quest headsets (e.g., 'Android devices (including Meta Quest)').",
-        "The APK download link path remains unchanged: /assets/apk/cactus-cowboy-mod-menu.apk."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/DownloadsPanel.tsx",
-          "operation": "modify",
-          "description": "Replace Samsung-only text with Android wording that explicitly includes Meta Quest headsets (e.g., \"Android devices (including Meta Quest)\") in both the \"APK Available\" state and any compatibility/help text. Do not change APK_PATH; it must remain /assets/apk/cactus-cowboy-mod-menu.apk."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Extend the in-app APK build instructions overlay to include Meta Quest 3S notes without removing existing Bubblewrap/TWA steps.",
-      "acceptanceCriteria": [
-        "The in-app build instructions overlay includes a distinct section titled for Meta Quest (e.g., 'Meta Quest 3S / Quest (Android) Notes').",
-        "The new section explains, at minimum: Quest uses Android; the app can run via Quest Browser; and that an APK wrapper is an alternative packaging route if the user is distributing/installing an APK.",
-        "Existing Bubblewrap/TWA instructions remain present and readable (not replaced)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "operation": "modify",
-          "description": "Update the embedded BUILD_INSTRUCTIONS content to add a distinct \"Meta Quest 3S / Quest (Android) Notes\" section. Include minimum required points (Quest uses Android; run via Quest Browser; APK wrapper is an alternative packaging route). Keep all existing Bubblewrap/TWA steps present and readable. Also remove/replace Samsung-specific sections so they are accurate for Quest/Android generally."
-        },
-        {
-          "path": "frontend/ANDROID_APK_BUILD.md",
-          "operation": "modify",
-          "description": "Align the markdown build guide with the in-app overlay changes by adding a \"Meta Quest 3S / Quest (Android) Notes\" section and removing Samsung-only compatibility/optimization wording in favor of general Android (including Meta Quest) wording, while keeping Bubblewrap/TWA instructions intact."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Improve client-side detection for Meta Quest Browser sessions and show Quest-relevant messaging for Android-capable features (e.g., app launcher).",
-      "acceptanceCriteria": [
-        "When opened in a Quest Browser user agent, the app does not show misleading 'not Android' warnings for features that rely on Android (if Quest UA indicates Android/Quest Browser).",
-        "Any Quest detection is performed purely client-side and does not require backend changes.",
-        "If Quest cannot support a feature (e.g., deep-link app switching limitations), the UI displays a clear, actionable message rather than failing silently."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useRuntimeEnv.ts",
-          "operation": "create",
-          "description": "Create a small client-side runtime environment detection hook/util that classifies the session (e.g., androidDetected, questBrowserDetected) based on user agent and related browser signals. This must be purely client-side and used to drive Quest-specific messaging."
-        },
-        {
-          "path": "frontend/src/components/AppToAppLauncherPanel.tsx",
-          "operation": "modify",
-          "description": "Switch Android detection to use the shared runtime detection and treat Quest Browser sessions as Android-capable for messaging. Add optional \"Quest detected\" helper text when applicable. If deep-link/app switching is unreliable/blocked in Quest Browser, show a clear actionable message (e.g., suggest using the web app in Quest Browser or installing the APK/TWA wrapper) instead of failing silently."
-        },
-        {
-          "path": "frontend/src/components/DownloadsPanel.tsx",
-          "operation": "modify",
-          "description": "Use the shared runtime detection to tailor brief Quest-relevant helper copy in the Downloads area (e.g., when Quest is detected, remind that Quest Browser can run the web app and APK/TWA is an alternative), without changing feature set or requiring backend changes."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add VR-friendly layout/accessibility adjustments for Quest Browser (readable text, safe tap targets, reliable scrolling) without altering shadcn/ui sources or changing core layout/features.",
-      "acceptanceCriteria": [
-        "In Quest Browser, primary controls (buttons, switches, sliders, inputs) are readable and interactable without requiring zoom.",
-        "No critical UI is clipped off-screen on typical Quest Browser viewport sizes; scrolling works reliably in ScrollArea regions.",
-        "Any new styling adjustments are implemented in app-owned styles/components (not by editing read-only UI component sources under frontend/src/components/ui)."
+        "No VR-specific panels, downloads/APK instructions, app-to-app launcher, mod menu, or Internet Identity login screens are presented in the primary UI flow.",
+        "The UI works in a normal desktop browser without requiring authentication to access the browser interface."
       ],
       "file_operations": [
         {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Integrate runtime environment detection to apply an app-owned marker (e.g., a data attribute or class on the document element) when running in Quest Browser, enabling VR-specific styling without touching shadcn/ui sources."
+          "description": "Remove VR browser markers/styling toggles and remove authentication gating from the primary flow (do not render AuthGate). Ensure no Quest/VR-specific UI is conditionally shown and the browser interface is accessible immediately on load."
         },
         {
           "path": "frontend/src/index.css",
           "operation": "modify",
-          "description": "Add Quest/VR-browser specific CSS rules gated by the app-owned marker to improve comfort and usability: increase base text size/line-height, enforce larger minimum interactive target sizes, and ensure scroll containers/dialogs behave well in VR browser viewports. Keep changes within app-owned CSS (do not edit files under frontend/src/components/ui)."
+          "description": "Remove/neutralize VR-specific CSS rules (e.g., selectors based on a VR marker attribute) and any Quest/VR optimizations that alter layout/typography for VR mode, ensuring the experience remains standard desktop 2D."
+        },
+        {
+          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "operation": "delete",
+          "description": "Delete the mod-menu page implementation to prevent mod-menu UI from being shipped/accidentally wired back into the primary experience."
+        },
+        {
+          "path": "frontend/src/components/DownloadsPanel.tsx",
+          "operation": "delete",
+          "description": "Delete the APK/downloads UI panel (Quest/APK messaging) so it cannot appear in the primary UI flow."
         },
         {
           "path": "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "operation": "modify",
-          "description": "Adjust overlay layout classes (in this app-owned component) to improve VR usability (e.g., more reliable viewport-height sizing and readable monospaced text sizing) while keeping the same feature set and preserving ScrollArea usability."
+          "operation": "delete",
+          "description": "Delete the APK/TWA build instructions overlay component to remove APK/Quest instructions from the app UI surface."
+        },
+        {
+          "path": "frontend/src/components/AppToAppLauncherPanel.tsx",
+          "operation": "delete",
+          "description": "Delete the app-to-app launcher panel (Android/Quest deep-link switching UI) to keep the experience laptop-only 2D."
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Ensure viewport metadata is appropriate for mobile/VR browsers so the app scales correctly on Meta Quest Browser.",
+      "id": "REQ-3",
+      "summary": "Update document title and PWA manifest branding to match the laptop web browser experience.",
       "acceptanceCriteria": [
-        "The HTML entry document includes a viewport meta tag appropriate for mobile browsers (so the app is not rendered at desktop scale on Quest).",
-        "The change does not add user-visible navigation or reliance on standalone HTML pages; index.html remains a minimal React mount shell."
+        "The document title (frontend/index.html) reflects the new browser app name (not the previous mod menu title).",
+        "frontend/public/manifest.webmanifest name/short_name/description reflect the new browser app (not the previous mod menu/Quest/APK messaging)."
       ],
       "file_operations": [
         {
           "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Update/confirm the existing viewport meta tag for mobile/VR browser scaling (e.g., ensure width=device-width and appropriate scaling options, optionally adding viewport-fit=cover if helpful) while keeping index.html as a minimal React mount shell with no extra navigation."
+          "description": "Update the HTML document title to a browser-style app name (English) and remove any mod-menu-specific naming."
+        },
+        {
+          "path": "frontend/public/manifest.webmanifest",
+          "operation": "modify",
+          "description": "Update manifest name/short_name/description to the new laptop web browser experience (English). Remove mod-menu/VR/Quest/APK wording from description and update shortcuts metadata accordingly to match the browser app."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Apply a coherent, consistent, responsive laptop web browser visual theme across the browser page.",
+      "acceptanceCriteria": [
+        "Browser chrome (top bar, buttons, input) uses a consistent style system (e.g., neutral ‘graphite’ UI with one accent color) and remains readable and accessible.",
+        "Layout is responsive for typical laptop widths and keeps the iframe usable (no overflow issues)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Adjust global CSS variables and base styles toward a neutral 'graphite' browser theme with a single accent color; ensure readable contrast, consistent spacing, and remove desert/rainbow background utilities from being the default page background if they interfere with a browser-like shell."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Align Tailwind theme extensions with the new browser chrome styling needs (neutral palette + one accent, subtle shadows/borders). Keep changes compatible with existing shadcn/ui theming."
+        },
+        {
+          "path": "frontend/src/pages/BrowserPage.tsx",
+          "operation": "modify",
+          "description": "Refine BrowserPage layout/styling for a browser-like chrome: consistent button sizes, input styling, spacing, and a responsive layout that preserves a large iframe area without overflow. Use shadcn/ui components (e.g., Button, Input, Separator/Tooltip if available) for consistent styling; verify the component's usage instructions before implementing."
         }
       ]
     }

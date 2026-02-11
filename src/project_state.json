@@ -1,56 +1,42 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Project now includes making the app compatible with Meta Quest 3S VR.",
-  "architectural_notes": [],
+  "summary": "Build a simple laptop (2D) web browser-style app that loads external websites in an iframe, with basic navigation controls.",
+  "architectural_notes": [
+    "Use an iframe-based approach to display external websites; some sites may block being embedded due to X-Frame-Options/CSP."
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-explicit-meta-quest-3s-support-guidance-in-the-ui-covering-both-a-running-the-app-in-the-meta-quest-oculus-quest-browser-as-a-pwa-and-b-installing-running-the-android-apk-wrapper-on-quest-android-where-applicable",
-      "title": "Add explicit Meta Quest 3S support guidance in the UI, covering both (a) running the app in the Meta Quest (Oculus/Quest) Browser as a PWA and (b) installing/running the Android APK wrapper on Quest (Android) where applicable.",
+      "id": "feature-replace-the-current-mod-menu-authenticated-ui-with-a-laptop-only-2d-web-browser-style-interface-that-can-load-external-websites-inside-an-iframe-including-a-url-bar-and-basic-navigation-controls-back-forward-reload-go",
+      "title": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-existing-apk-download-experience-to-be-accurate-for-meta-quest-android-devices-remove-samsung-only-wording-and-replace-it-with-wording-that-includes-meta-quest-headsets-as-supported-android-devices-where-relevant",
-      "title": "Update the existing APK download experience to be accurate for Meta Quest (Android) devices: remove Samsung-only wording and replace it with wording that includes Meta Quest headsets as supported Android devices where relevant.",
+      "id": "feature-ensure-the-app-has-no-vr-mode-and-does-not-show-vr-quest-apk-mod-menu-ui-elements-the-experience-must-be-laptop-only-2d",
+      "title": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-extend-the-embedded-apk-build-instructions-shown-in-the-in-app-build-overlay-to-include-a-meta-quest-3s-section-quest-specific-install-run-notes-without-removing-the-existing-bubblewrap-twa-steps",
-      "title": "Extend the embedded APK build instructions shown in the in-app build overlay to include a Meta Quest 3S section (Quest-specific install/run notes) without removing the existing Bubblewrap/TWA steps.",
+      "id": "feature-update-the-app-s-shell-branding-to-match-the-laptop-web-browser-experience-html-title-and-pwa-manifest-name-description",
+      "title": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-improve-runtime-environment-detection-so-the-app-can-recognize-meta-quest-browser-sessions-and-show-quest-relevant-messaging-e-g-treat-quest-browser-as-android-capable-for-the-app-launcher-panel-messaging-and-optionally-show-quest-detected-helper-text",
-      "title": "Improve runtime environment detection so the app can recognize Meta Quest Browser sessions and show Quest-relevant messaging (e.g., treat Quest Browser as Android-capable for the App Launcher panel messaging, and optionally show 'Quest detected' helper text).",
+      "id": "feature-apply-a-coherent-visual-theme-suitable-for-a-laptop-web-browser-ui-colors-typography-spacing-component-styling-and-use-it-consistently-across-the-browser-page",
+      "title": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
       "reqIds": [
         "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-app-is-comfortable-and-usable-in-a-vr-browser-context-by-adding-vr-friendly-layout-accessibility-adjustments-larger-readable-base-text-safe-tap-click-targets-and-avoiding-interaction-blockers-while-preserving-the-current-overall-layout-and-feature-set",
-      "title": "Ensure the app is comfortable and usable in a VR browser context by adding VR-friendly layout/accessibility adjustments (larger readable base text, safe tap/click targets, and avoiding interaction blockers) while preserving the current overall layout and feature set.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-add-confirm-appropriate-viewport-metadata-for-mobile-vr-browsers-in-the-html-shell-so-the-ui-scales-correctly-on-meta-quest-browser",
-      "title": "Add/confirm appropriate viewport metadata for mobile/VR browsers in the HTML shell so the UI scales correctly on Meta Quest Browser.",
-      "reqIds": [
-        "REQ-6"
       ],
       "version": 1
     }
@@ -58,12 +44,13 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add support/compatibility so the app can run on Meta Quest 3S VR",
+      "summary": "Implement a laptop-only (2D) web browser UI with URL bar, back/forward buttons, and an iframe to load external websites",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Make the app runnable on Meta Quest 3S (Quest Browser + Android APK/TWA)",
+  "gameProjectType": "none",
+  "projectName": "Laptop-only 2D web browser UI (URL bar + iframe navigation)",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

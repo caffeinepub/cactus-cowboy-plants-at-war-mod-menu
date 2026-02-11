@@ -1,5 +1,5 @@
 {
-  "frontend/src/App.tsx": "Main application component that wraps the mod menu with authentication gate, applies dynamic background based on rainbow toggle state, and sets VR browser marker for styling.",
+  "frontend/src/App.tsx": "Minimal app component that renders the BrowserPage directly without authentication or VR features.",
   "frontend/src/pages/ModMenuPage.tsx": "Complete mod menu page with three-column responsive layout integrating ProcessSelectorPanel, PrefabListPanel, DownloadsPanel, AppToAppLauncherPanel, item spawner, movement mods, and game mods (disableMonsters and rainbowBackground) with footer attribution.",
   "frontend/src/components/AuthGate.tsx": "Authentication wrapper that requires Internet Identity sign-in before showing app content, handles login/logout, and clears cached data on logout.",
   "frontend/src/components/ProfileSetupDialog.tsx": "First-time user profile setup dialog that prompts for a display name and initializes all required profile fields including the new processSelector field with undefined value.",
@@ -8,10 +8,10 @@
   "frontend/src/hooks/useModSettings.ts": "Custom hook managing mod settings state with backend persistence for toggles and localStorage for multipliers/rainbow, mapping between frontend and backend data models.",
   "frontend/src/hooks/useItemSpawner.ts": "Custom hook for item spawner functionality including adding items and maintaining spawn logs.",
   "frontend/src/state/modSettings.ts": "Type definitions and helper functions for mod settings including defaults, multiplier clamping, and localStorage utilities.",
-  "frontend/src/index.css": "Global styles with desert-themed OKLCH color palette, mobile touch optimizations, and VR browser-specific styling for Meta Quest (larger text, touch targets, and improved readability).",
-  "frontend/tailwind.config.js": "Tailwind configuration extended with desert theme colors (sand, terracotta, cactus), custom shadows, and maintained OKLCH color system.",
-  "frontend/index.html": "Minimal HTML shell with viewport meta tag optimized for mobile and VR browsers including viewport-fit=cover for proper scaling on Meta Quest.",
-  "frontend/public/manifest.webmanifest": "Enhanced PWA manifest with complete metadata including app-to-app launcher description for TWA/APK packaging.",
+  "frontend/src/index.css": "Global styles with neutral graphite color palette optimized for a clean browser interface in both light and dark modes.",
+  "frontend/tailwind.config.js": "Tailwind configuration with simplified neutral theme colors and subtle shadows for browser chrome styling.",
+  "frontend/index.html": "HTML entry point with updated title \"Web Browser\" and standard viewport configuration.",
+  "frontend/public/manifest.webmanifest": "PWA manifest with browser app branding, metadata, and icon references.",
   "frontend/src/hooks/useProcessSelector.ts": "Custom hook managing process selector state with silent updates (removed toast spam) and proper null/undefined conversion for backend compatibility.",
   "frontend/src/hooks/usePrefabCatalog.ts": "Custom hook that loads and caches the static prefab catalog JSON from frontend public assets with error handling and infinite stale time for static data.",
   "frontend/src/components/PrefabListPanel.tsx": "Prefab catalog panel with search/filter functionality, copy-to-clipboard for each prefab ID with toast feedback, and graceful error/empty states.",
@@ -23,5 +23,7 @@
   "frontend/src/hooks/useAppToAppLink.ts": "Custom hook managing user-configurable deep link/intent URL with localStorage persistence, setter, and reset-to-default functionality.",
   "frontend/src/components/ApkBuildInstructionsOverlay.tsx": "In-app dialog overlay displaying APK build instructions including Meta Quest 3S notes, Quest Browser usage, and APK/TWA wrapper guidance as scrollable plain text.",
   "frontend/src/components/AppToAppLauncherPanel.tsx": "Android-friendly app-to-app launcher panel with Quest Browser detection, configurable deep link input, launch button with visibility-change detection, and Quest-specific messaging for deep-link limitations.",
-  "frontend/src/hooks/useRuntimeEnv.ts": "Client-side runtime environment detection hook that identifies Android, Quest Browser, and VR browser sessions based on user agent analysis."
+  "frontend/src/hooks/useRuntimeEnv.ts": "Client-side runtime environment detection hook that identifies Android, Quest Browser, and VR browser sessions based on user agent analysis.",
+  "frontend/src/pages/BrowserPage.tsx": "Main browser page component with URL bar, back/forward/reload navigation controls, and iframe content area with empty state messaging.",
+  "frontend/src/hooks/useBrowserHistory.ts": "Custom hook managing browser navigation state including current URL, back/forward history stacks, and navigation actions."
 }

@@ -1,126 +1,98 @@
 {
   "kind": "build_request",
-  "title": "Make the app runnable on Meta Quest 3S (Quest Browser + Android APK/TWA)",
+  "title": "Laptop-only 2D web browser UI (URL bar + iframe navigation)",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add explicit Meta Quest 3S support guidance in the UI, covering both (a) running the app in the Meta Quest (Oculus/Quest) Browser as a PWA and (b) installing/running the Android APK wrapper on Quest (Android) where applicable.",
+      "text": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-5",
+          "msg-7",
+          "msg-9"
         ],
         "quotes": [
-          "I want you to make it so a MetaQuest 3S VR can run this app."
+          "make me  web browser that can go on any website",
+          "a Laptop Web browser",
+          "only the laptop"
         ]
       },
       "acceptanceCriteria": [
-        "The app UI contains a clearly labeled section (or additions to existing Downloads / instructions UI) that mentions Meta Quest 3S by name and explains how to open the app in Quest Browser.",
-        "The guidance also explains the Android APK/TWA option in Quest terms (Android-based headset), including the prerequisite that the web app must be reachable via HTTPS and the manifest must be accessible at /manifest.webmanifest.",
+        "App renders a browser-like layout on desktop/laptop screens with a top navigation bar and a main content area.",
+        "URL input supports entering a domain or full URL; if protocol is missing, the app prepends https:// before loading.",
+        "Clicking Go (or pressing Enter in the URL bar) loads the requested URL in an iframe.",
+        "Back/Forward navigate through the app-managed history of visited URLs (those entered via the URL bar).",
+        "Reload re-loads the currently displayed URL in the iframe.",
         "All user-facing text is in English."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Update the existing APK download experience to be accurate for Meta Quest (Android) devices: remove Samsung-only wording and replace it with wording that includes Meta Quest headsets as supported Android devices where relevant.",
+      "text": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-9"
         ],
         "quotes": [
-          "I want you to make it so a MetaQuest 3S VR can run this app."
+          "only the laptop"
         ]
       },
       "acceptanceCriteria": [
-        "In the Downloads panel, the APK availability description does not state or imply 'Samsung-only' compatibility.",
-        "The Downloads panel copy mentions Android devices and explicitly includes Meta Quest headsets (e.g., 'Android devices (including Meta Quest)').",
-        "The APK download link path remains unchanged: /assets/apk/cactus-cowboy-mod-menu.apk."
+        "No VR-specific panels, downloads/APK instructions, app-to-app launcher, mod menu, or Internet Identity login screens are presented in the primary UI flow.",
+        "The UI works in a normal desktop browser without requiring authentication to access the browser interface."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Extend the embedded APK build instructions shown in the in-app build overlay to include a Meta Quest 3S section (Quest-specific install/run notes) without removing the existing Bubblewrap/TWA steps.",
+      "text": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-5",
+          "msg-9"
         ],
         "quotes": [
-          "I want you to make it so a MetaQuest 3S VR can run this app."
+          "make me  web browser that can go on any website",
+          "only the laptop"
         ]
       },
       "acceptanceCriteria": [
-        "The in-app build instructions overlay includes a distinct section titled for Meta Quest (e.g., 'Meta Quest 3S / Quest (Android) Notes').",
-        "The new section explains, at minimum: Quest uses Android; the app can run via Quest Browser; and that an APK wrapper is an alternative packaging route if the user is distributing/installing an APK.",
-        "Existing Bubblewrap/TWA instructions remain present and readable (not replaced)."
+        "The document title (frontend/index.html) reflects the new browser app name (not the previous mod menu title).",
+        "frontend/public/manifest.webmanifest name/short_name/description reflect the new browser app (not the previous mod menu/Quest/APK messaging)."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Improve runtime environment detection so the app can recognize Meta Quest Browser sessions and show Quest-relevant messaging (e.g., treat Quest Browser as Android-capable for the App Launcher panel messaging, and optionally show 'Quest detected' helper text).",
+      "text": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-7",
+          "msg-9"
         ],
         "quotes": [
-          "I want you to make it so a MetaQuest 3S VR can run this app."
+          "a Laptop Web browser",
+          "only the laptop"
         ]
       },
       "acceptanceCriteria": [
-        "When opened in a Quest Browser user agent, the app does not show misleading 'not Android' warnings for features that rely on Android (if Quest UA indicates Android/Quest Browser).",
-        "Any Quest detection is performed purely client-side and does not require backend changes.",
-        "If Quest cannot support a feature (e.g., deep-link app switching limitations), the UI displays a clear, actionable message rather than failing silently."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Ensure the app is comfortable and usable in a VR browser context by adding VR-friendly layout/accessibility adjustments (larger readable base text, safe tap/click targets, and avoiding interaction blockers) while preserving the current overall layout and feature set.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "I want you to make it so a MetaQuest 3S VR can run this app."
-        ]
-      },
-      "acceptanceCriteria": [
-        "In Quest Browser, primary controls (buttons, switches, sliders, inputs) are readable and interactable without requiring zoom.",
-        "No critical UI is clipped off-screen on typical Quest Browser viewport sizes; scrolling works reliably in ScrollArea regions.",
-        "Any new styling adjustments are implemented in app-owned styles/components (not by editing read-only UI component sources under frontend/src/components/ui)."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Add/confirm appropriate viewport metadata for mobile/VR browsers in the HTML shell so the UI scales correctly on Meta Quest Browser.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "I want you to make it so a MetaQuest 3S VR can run this app."
-        ]
-      },
-      "acceptanceCriteria": [
-        "The HTML entry document includes a viewport meta tag appropriate for mobile browsers (so the app is not rendered at desktop scale on Quest).",
-        "The change does not add user-visible navigation or reliance on standalone HTML pages; index.html remains a minimal React mount shell."
+        "Browser chrome (top bar, buttons, input) uses a consistent style system (e.g., neutral ‘graphite’ UI with one accent color) and remains readable and accessible.",
+        "Layout is responsive for typical laptop widths and keeps the iframe usable (no overflow issues)."
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under frontend/src/components/ui (read-only Shadcn UI sources).",
-    "Do not modify frontend immutable hook entrypoints (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx).",
-    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services.",
-    "Do not change the APK download path (/assets/apk/cactus-cowboy-mod-menu.apk)."
+    "Frontend must not edit files under frontend/src/components/ui (compose existing Shadcn components instead).",
+    "Frontend must not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services."
   ],
   "nonGoals": [
-    "Implementing a native Meta Quest OpenXR/WebXR immersive VR scene or 3D mode (this request is about running the existing app on Quest).",
-    "Adding third-party authentication providers beyond Internet Identity.",
-    "Adding real-time features (WebSockets/push notifications) or external databases/services."
+    "Implementing a fully unrestricted browser (bypassing sites that block iframe embedding).",
+    "VR mode, Quest Browser optimizations, or APK/TWA build/download flows.",
+    "WebSockets/real-time features, third-party auth providers, or external databases."
   ],
   "imageRequirements": {
     "required": [],
