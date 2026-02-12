@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useGetCallerUserProfile, useSaveCallerUserProfile } from './useQueries';
+import { useGetCallerUserProfile, useUpdateModSettings } from './useQueries';
 import type { ModSettings as BackendModSettings } from '../backend';
 
 export interface ModSettings {
@@ -22,43 +22,43 @@ const DEFAULT_SETTINGS: ModSettings = {
   rainbowBackground: false,
 };
 
-// Map backend fields to frontend settings
 function backendToFrontend(backend: BackendModSettings): Partial<ModSettings> {
   return {
-    fly: backend.noclipEnabled,
-    superSpeed: backend.infiniteManaEnabled,
-    superJump: backend.moonJumpEnabled,
-    disableMonsters: backend.infiniteHealthEnabled,
+    fly: backend.flyEnabled,
+    superSpeed: backend.superSpeedEnabled,
+    speedMultiplier: backend.superSpeedMultiplier,
+    superJump: backend.superJumpEnabled,
+    jumpMultiplier: backend.superJumpMultiplier,
+    disableMonsters: backend.disableMonsters,
   };
 }
 
 function frontendToBackend(frontend: ModSettings): BackendModSettings {
   return {
-    noclipEnabled: frontend.fly,
-    infiniteManaEnabled: frontend.superSpeed,
-    moonJumpEnabled: frontend.superJump,
-    infiniteHealthEnabled: frontend.disableMonsters,
+    flyEnabled: frontend.fly,
+    superSpeedEnabled: frontend.superSpeed,
+    superSpeedMultiplier: frontend.speedMultiplier,
+    superJumpEnabled: frontend.superJump,
+    superJumpMultiplier: frontend.jumpMultiplier,
+    disableMonsters: frontend.disableMonsters,
   };
 }
 
 export function useModSettings() {
-  const { data: userProfile, isLoading } = useGetCallerUserProfile();
-  const { mutateAsync: saveProfile } = useSaveCallerUserProfile();
+  const { data: userProfile, isLoading: profileLoading } = useGetCallerUserProfile();
+  const { mutateAsync: updateBackendSettings } = useUpdateModSettings();
   const [settings, setSettings] = useState<ModSettings>(DEFAULT_SETTINGS);
 
   // Load settings from backend when profile is available
   useEffect(() => {
     if (userProfile) {
       const backendSettings = backendToFrontend(userProfile.modSettings);
-      // Load client-side settings from localStorage
       const stored = localStorage.getItem('modSettings');
       const clientSettings = stored ? JSON.parse(stored) : {};
       
       setSettings({
         ...DEFAULT_SETTINGS,
         ...backendSettings,
-        speedMultiplier: clientSettings.speedMultiplier || 1,
-        jumpMultiplier: clientSettings.jumpMultiplier || 1,
         rainbowBackground: clientSettings.rainbowBackground || false,
       });
     }
@@ -68,29 +68,22 @@ export function useModSettings() {
     const newSettings = { ...settings, ...updates };
     setSettings(newSettings);
 
-    // Save to localStorage for client-only settings
+    // Save rainbow background to localStorage (frontend-only)
     localStorage.setItem('modSettings', JSON.stringify({
-      speedMultiplier: newSettings.speedMultiplier,
-      jumpMultiplier: newSettings.jumpMultiplier,
       rainbowBackground: newSettings.rainbowBackground,
     }));
 
-    // Save to backend
-    if (userProfile) {
-      try {
-        await saveProfile({
-          ...userProfile,
-          modSettings: frontendToBackend(newSettings),
-        });
-      } catch (error) {
-        console.error('Failed to save settings:', error);
-      }
+    // Save backend-synced settings
+    try {
+      await updateBackendSettings(frontendToBackend(newSettings));
+    } catch (error) {
+      console.error('Failed to save settings:', error);
     }
   };
 
   return {
     settings,
     updateSettings,
-    isLoading,
+    isLoading: profileLoading,
   };
 }

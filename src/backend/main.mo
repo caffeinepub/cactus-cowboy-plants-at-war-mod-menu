@@ -3,37 +3,45 @@ import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
 import Array "mo:core/Array";
+import Text "mo:core/Text";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import Migration "migration";
 
-
-
+(with migration = Migration.run)
 actor {
   // Initialize the user system state (authorization)
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
 
   public type ModSettings = {
-    infiniteHealthEnabled : Bool;
-    infiniteManaEnabled : Bool;
-    noclipEnabled : Bool;
-    moonJumpEnabled : Bool;
+    flyEnabled : Bool;
+    superSpeedEnabled : Bool;
+    superSpeedMultiplier : Float;
+    superJumpEnabled : Bool;
+    superJumpMultiplier : Float;
+    disableMonsters : Bool;
   };
 
-  type Item = {
+  public type Item = {
     name : Text;
     typeId : Nat32;
   };
 
-  type ItemSpawner = {
+  public type ItemSpawner = {
     items : [Item];
+    spawnHistory : [Text];
   };
 
-  public type UserProfile = {
+  public type Prefab = {
     name : Text;
-    itemSpawner : ItemSpawner;
-    modSettings : ModSettings;
-    processSelector : ProcessSelector; // New field
+    prefabId : Text;
+    position : Text;
+  };
+
+  public type PrefabSpawner = {
+    prefabs : [Prefab];
+    spawnHistory : [Text];
   };
 
   public type ProcessSelector = {
@@ -43,6 +51,14 @@ actor {
   public type AvailableProcesses = {
     processes : [Text];
     lastUpdated : Time.Time;
+  };
+
+  public type UserProfile = {
+    name : Text;
+    itemSpawner : ItemSpawner;
+    prefabSpawner : PrefabSpawner;
+    modSettings : ModSettings;
+    processSelector : ProcessSelector;
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -76,10 +92,14 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can retrieve mod settings");
     };
-    switch (userProfiles.get(caller)) {
-      case (null) { Runtime.trap("User profile does not exist") };
-      case (?profile) { profile.modSettings };
+    getUserProfileInternal(caller).modSettings;
+  };
+
+  public shared ({ caller }) func updateModSettings(newSettings : ModSettings) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can update mod settings");
     };
+    updateProfileField(caller, func(profile) { { profile with modSettings = newSettings } });
   };
 
   public query ({ caller }) func getItemSpawner() : async ?ItemSpawner {
@@ -97,46 +117,57 @@ actor {
       Runtime.trap("Unauthorized: Only users can add items");
     };
 
-    let userProfile = switch (userProfiles.get(caller)) {
-      case (null) { Runtime.trap("User profile does not exist") };
-      case (?profile) { profile };
-    };
-
+    let userProfile = getUserProfileInternal(caller);
     let itemsArray = userProfile.itemSpawner.items;
     let newItems = itemsArray.concat([item]);
-    let newItemSpawner = { items = newItems };
-
-    let newProfile : UserProfile = {
-      name = userProfile.name;
-      itemSpawner = newItemSpawner;
-      modSettings = userProfile.modSettings;
-      processSelector = userProfile.processSelector; // Carry over existing process selector
+    let newItemSpawner = {
+      items = newItems;
+      spawnHistory = userProfile.itemSpawner.spawnHistory;
     };
-
-    userProfiles.add(caller, newProfile);
+    updateProfileField(caller, func(profile) { { profile with itemSpawner = newItemSpawner } });
   };
 
-  // Persist process selector
+  public shared ({ caller }) func clearItems() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can clear items");
+    };
+    updateProfileField(
+      caller,
+      func(profile) {
+        {
+          profile with itemSpawner = { profile.itemSpawner with items = [] }
+        };
+      },
+    );
+  };
+
+  public shared ({ caller }) func addSpawnHistory(record : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add spawn history");
+    };
+
+    let userProfile = getUserProfileInternal(caller);
+    let updatedHistory = userProfile.itemSpawner.spawnHistory.concat([record]);
+    let newItemSpawner = {
+      userProfile.itemSpawner with spawnHistory = updatedHistory
+    };
+    updateProfileField(caller, func(profile) { { profile with itemSpawner = newItemSpawner } });
+  };
+
   public shared ({ caller }) func setProcessSelector(processSelector : ProcessSelector) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can set process selector");
     };
-    let userProfile = getUserProfileInternal(caller);
-    let newProfile : UserProfile = { userProfile with processSelector };
-    userProfiles.add(caller, newProfile);
+    updateProfileField(caller, func(profile) { { profile with processSelector } });
   };
 
   public query ({ caller }) func getProcessSelector() : async ProcessSelector {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can get process selector");
     };
-    switch (userProfiles.get(caller)) {
-      case (null) { Runtime.trap("Profile does not exist") };
-      case (?profile) { profile.processSelector };
-    };
+    getUserProfileInternal(caller).processSelector;
   };
 
-  // Manage available processes
   public shared ({ caller }) func updateAvailableProcesses(processes : [Text]) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can update available processes");
@@ -148,14 +179,73 @@ actor {
   };
 
   public query ({ caller }) func getAvailableProcesses() : async AvailableProcesses {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can retrieve available processes");
+    };
     availableProcesses;
   };
 
-  // Internal method to get user profile safely
+  public query ({ caller }) func getPrefabSpawner() : async ?PrefabSpawner {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can retrieve prefab spawner");
+    };
+    switch (userProfiles.get(caller)) {
+      case (null) { null };
+      case (?profile) { ?profile.prefabSpawner };
+    };
+  };
+
+  public shared ({ caller }) func addPrefab(prefab : Prefab) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add prefabs");
+    };
+
+    let userProfile = getUserProfileInternal(caller);
+    let prefabsArray = userProfile.prefabSpawner.prefabs;
+    let newPrefabs = prefabsArray.concat([prefab]);
+    let newPrefabSpawner = {
+      prefabs = newPrefabs;
+      spawnHistory = userProfile.prefabSpawner.spawnHistory;
+    };
+    updateProfileField(caller, func(profile) { { profile with prefabSpawner = newPrefabSpawner } });
+  };
+
+  public shared ({ caller }) func clearPrefabs() : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can clear prefabs");
+    };
+    updateProfileField(
+      caller,
+      func(profile) {
+        {
+          profile with prefabSpawner = { profile.prefabSpawner with prefabs = [] }
+        };
+      },
+    );
+  };
+
+  public shared ({ caller }) func addPrefabSpawnHistory(record : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add prefab spawn history");
+    };
+
+    let userProfile = getUserProfileInternal(caller);
+    let updatedHistory = userProfile.prefabSpawner.spawnHistory.concat([record]);
+    let newPrefabSpawner = {
+      userProfile.prefabSpawner with spawnHistory = updatedHistory
+    };
+    updateProfileField(caller, func(profile) { { profile with prefabSpawner = newPrefabSpawner } });
+  };
+
   func getUserProfileInternal(caller : Principal) : UserProfile {
     switch (userProfiles.get(caller)) {
       case (null) { Runtime.trap("User profile does not exist") };
       case (?profile) { profile };
     };
+  };
+
+  func updateProfileField(caller : Principal, updateFunc : UserProfile -> UserProfile) : () {
+    let updatedProfile = updateFunc(getUserProfileInternal(caller));
+    userProfiles.add(caller, updatedProfile);
   };
 };

@@ -1,14 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Replace the current mod-menu/authenticated experience with a laptop-only 2D web-browser-style UI that loads websites in an iframe.
+**Goal:** Replace the current browser-only UI with an English Mod Menu page for “Cactus Cowboy: Plants at War” that lets authenticated users configure and persist mod settings, select a target process, and manage spawn lists (items and prefabs), with optional rainbow background styling and a game cover image.
 
 **Planned changes:**
-- Remove/replace the existing mod-menu/VR/authentication-first UI flow with a desktop/laptop browser page as the primary experience.
-- Add a browser-like top bar with URL input and controls: Back, Forward, Reload, and Go (Enter key supported).
-- Implement app-managed navigation history for URLs entered in the URL bar (Back/Forward), and reload the current iframe URL on demand.
-- Normalize entered addresses by prepending `https://` when the protocol is missing.
-- Update app shell branding to match the new browser experience (HTML document title and PWA manifest name/short_name/description).
-- Apply a consistent visual theme across the browser UI (colors, typography, spacing) and ensure responsive layout for typical laptop widths.
+- Create a new Mod Menu page as the primary app UI (replacing the BrowserPage-only/iframe UI).
+- Add Mod Menu controls for: Fly, Super Speed (with multiplier), Super Jump (with multiplier), Disable Monsters, and Rainbow Background.
+- Persist mod settings per user using Internet Identity authentication; restore settings on refresh/login and reflect state in the ModStatusBar (including multiplier values and a “NO MONSTERS” badge).
+- Add a Process Selector panel that uses existing backend APIs to list/refresh available processes, select one, persist selection, and indicate when a previously selected process is missing.
+- Implement an Item Spawner tool: user-managed item list (add/remove/clear), persistence per user, and a UI log/history of spawn actions.
+- Implement a Prefab Spawner: browse/search a prefab catalog “from the game”, allow adding prefabs to the spawn list and/or spawning directly, and persist chosen prefab entries per user.
+- Update backend canister Candid types/APIs so stored user profile fields match the Mod Menu features (Fly, Super Speed, Super Jump, Disable Monsters) and wire frontend read/write end-to-end.
+- Add and display a responsive “Cactus Cowboy: Plants at War” cover image (static asset under `frontend/public/assets/generated`) in the Mod Menu header/hero area with English alt text.
 
-**User-visible outcome:** On a laptop/desktop browser, users see a simple web-browser interface with a URL bar and navigation buttons, can load sites in an iframe, and can go back/forward/reload within their entered-URL history—without any VR/mod-menu/authentication UI.
+**User-visible outcome:** On launch, users see a Mod Menu page where they can toggle and tune movement cheats, disable monsters, enable a rainbow background, pick a process, manage item/prefab spawn lists with a spawn log, and see a game cover image; all settings are saved to their profile and restored after reload/login.

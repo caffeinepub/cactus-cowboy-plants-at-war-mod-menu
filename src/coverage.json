@@ -1,95 +1,177 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T21:42:56.431Z",
+  "generatedAt": "2026-02-11T00:56:45.378Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 9,
+    "implemented": 9,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
+        "summary": "Replace the current BrowserPage-only UI with a new Mod Menu page for “Cactus Cowboy: Plants at War” that exposes: Fly, Super Speed, Super Jump, Item Spawner (user-created list), Disable Monsters, Rainbow Background, Process Selector, and Prefab Spawner (from a prefab list).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/BrowserPage.tsx",
-          "frontend/src/hooks/useBrowserHistory.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/index.html"
         ],
         "matchedFiles": [
-          "frontend/src/pages/BrowserPage.tsx",
-          "frontend/src/hooks/useBrowserHistory.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/App.tsx",
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/index.html"
         ]
       },
       {
         "id": "REQ-2",
-        "summary": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
+        "summary": "Implement Fly, Super Speed, and Super Jump controls in the Mod Menu UI, including multipliers for speed and jump, and persist these settings per user (authenticated via Internet Identity).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/index.css",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/hooks/useModSettings.ts",
+          "frontend/src/components/ModStatusBar.tsx",
           "frontend/src/pages/ModMenuPage.tsx",
-          "frontend/src/components/DownloadsPanel.tsx",
-          "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "frontend/src/components/AppToAppLauncherPanel.tsx"
+          "frontend/src/components/ProfileSetupDialog.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/App.tsx",
-          "frontend/src/index.css",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/hooks/useModSettings.ts",
+          "frontend/src/components/ModStatusBar.tsx",
           "frontend/src/pages/ModMenuPage.tsx",
-          "frontend/src/components/DownloadsPanel.tsx",
-          "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "frontend/src/components/AppToAppLauncherPanel.tsx"
+          "frontend/src/components/ProfileSetupDialog.tsx"
         ]
       },
       {
         "id": "REQ-3",
-        "summary": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
+        "summary": "Add a “Disable Monsters” toggle in the Mod Menu UI and persist it per user profile.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/index.html",
-          "frontend/public/manifest.webmanifest"
+          "frontend/src/hooks/useModSettings.ts",
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/components/ModStatusBar.tsx"
         ],
         "matchedFiles": [
-          "frontend/index.html",
-          "frontend/public/manifest.webmanifest"
+          "frontend/src/hooks/useModSettings.ts",
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/components/ModStatusBar.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
+        "summary": "Add a “Rainbow Background” visual effect toggle that, when enabled, applies a rainbow/animated background styling to the Mod Menu page without affecting functionality.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/index.css",
-          "frontend/tailwind.config.js",
-          "frontend/src/pages/BrowserPage.tsx"
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/hooks/useModSettings.ts"
         ],
         "matchedFiles": [
           "frontend/src/index.css",
-          "frontend/tailwind.config.js",
-          "frontend/src/pages/BrowserPage.tsx"
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/hooks/useModSettings.ts"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Implement a Process Selector UI in the Mod Menu page using the existing backend process selector and available-process list APIs, allowing the user to select and persist a target process.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/ModMenuPage.tsx",
+          "frontend/src/components/ProcessSelectorPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/ModMenuPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Implement an Item Spawner tool that supports creating and managing a user-defined list of items (add/remove/clear), persisted per user, and shows a log/history of spawn actions in the UI.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/ItemSpawnerPanel.tsx",
+          "frontend/src/hooks/useItemSpawner.ts",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/ModMenuPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/ItemSpawnerPanel.tsx",
+          "frontend/src/hooks/useItemSpawner.ts",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/ModMenuPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Add a Prefab Spawner that uses a prefab list (catalog) “from the game”, lets users browse/search prefabs, and add selected prefabs to the spawn list (or spawn directly), persisting chosen prefabs per user.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/prefabs/cactus-cowboy-prefabs.json",
+          "frontend/src/components/PrefabSpawnerPanel.tsx",
+          "frontend/src/components/PrefabListPanel.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/ModMenuPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/PrefabSpawnerPanel.tsx",
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/ModMenuPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-8",
+        "summary": "Update the backend canister types and APIs so mod settings stored in the user profile align with the Mod Menu features (Fly, Super Speed, Super Jump, Disable Monsters) rather than the current placeholder field names, and ensure the frontend uses the updated fields end-to-end.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useModSettings.ts",
+          "frontend/src/components/ProfileSetupDialog.tsx",
+          "frontend/src/components/ModStatusBar.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useModSettings.ts",
+          "frontend/src/components/ProfileSetupDialog.tsx",
+          "frontend/src/components/ModStatusBar.tsx"
+        ]
+      },
+      {
+        "id": "REQ-9",
+        "summary": "Display a “Cactus Cowboy: Plants at War” cover image on the Mod Menu page (e.g., in the header/hero area) using a generated static asset under frontend/public/assets/generated.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/public/assets/generated/cactus-cowboy-plants-at-war-cover.dim_1024x1536.png",
+          "frontend/src/pages/ModMenuPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/public/assets/generated/cactus-cowboy-plants-at-war-cover.dim_1024x1536.png",
+          "frontend/src/pages/ModMenuPage.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/index.html",
-    "frontend/public/manifest.webmanifest",
+    "frontend/public/assets/generated/cactus-cowboy-plants-at-war-cover.dim_1024x1536.png",
     "frontend/src/App.tsx",
-    "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-    "frontend/src/components/AppToAppLauncherPanel.tsx",
-    "frontend/src/components/DownloadsPanel.tsx",
-    "frontend/src/hooks/useBrowserHistory.ts",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/ItemSpawnerPanel.tsx",
+    "frontend/src/components/ModStatusBar.tsx",
+    "frontend/src/components/PrefabSpawnerPanel.tsx",
+    "frontend/src/components/ProfileSetupDialog.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useItemSpawner.ts",
+    "frontend/src/hooks/useModSettings.ts",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/index.css",
-    "frontend/src/pages/BrowserPage.tsx",
     "frontend/src/pages/ModMenuPage.tsx",
     "frontend/tailwind.config.js",
     "project_state.json",

@@ -1,101 +1,185 @@
 {
   "kind": "build_request",
-  "title": "Laptop-only 2D web browser UI (URL bar + iframe navigation)",
+  "title": "Cactus Cowboy: Plants at War mod menu UI with cheats, spawners, rainbow background, process selector, and game cover image",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
+      "text": "Replace the current BrowserPage-only UI with a new Mod Menu page for “Cactus Cowboy: Plants at War” that exposes: Fly, Super Speed, Super Jump, Item Spawner (user-created list), Disable Monsters, Rainbow Background, Process Selector, and Prefab Spawner (from a prefab list).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-5",
-          "msg-7",
-          "msg-9"
+          "msg-6"
         ],
         "quotes": [
-          "make me  web browser that can go on any website",
-          "a Laptop Web browser",
-          "only the laptop"
+          "Make a cactus cowboy plants at war Mod menu fly super speed Super jump item spawner (list create) Disable monster make the backround Rainbow make a process selecter. ... make a prefab spawner with a list of prefabs from the game"
         ]
       },
       "acceptanceCriteria": [
-        "App renders a browser-like layout on desktop/laptop screens with a top navigation bar and a main content area.",
-        "URL input supports entering a domain or full URL; if protocol is missing, the app prepends https:// before loading.",
-        "Clicking Go (or pressing Enter in the URL bar) loads the requested URL in an iframe.",
-        "Back/Forward navigate through the app-managed history of visited URLs (those entered via the URL bar).",
-        "Reload re-loads the currently displayed URL in the iframe.",
-        "All user-facing text is in English."
+        "Launching the app shows a Mod Menu page (not the iframe browser UI).",
+        "The Mod Menu page contains controls for Fly, Super Speed, Super Jump, Disable Monsters, Rainbow Background, Process Selector, and spawner tools.",
+        "All user-facing text on the Mod Menu page is in English."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
-      "target": "frontend",
+      "text": "Implement Fly, Super Speed, and Super Jump controls in the Mod Menu UI, including multipliers for speed and jump, and persist these settings per user (authenticated via Internet Identity).",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-9"
+          "msg-6"
         ],
         "quotes": [
-          "only the laptop"
+          "Mod menu fly super speed Super jump"
         ]
       },
       "acceptanceCriteria": [
-        "No VR-specific panels, downloads/APK instructions, app-to-app launcher, mod menu, or Internet Identity login screens are presented in the primary UI flow.",
-        "The UI works in a normal desktop browser without requiring authentication to access the browser interface."
+        "Fly, Super Speed, and Super Jump each have a toggle control.",
+        "Super Speed has a multiplier control; Super Jump has a multiplier control.",
+        "Toggling/adjusting settings persists and is restored after refresh/login.",
+        "The ModStatusBar reflects the enabled state and shows multiplier values for speed/jump."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
-      "target": "frontend",
+      "text": "Add a “Disable Monsters” toggle in the Mod Menu UI and persist it per user profile.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-5",
-          "msg-9"
+          "msg-6"
         ],
         "quotes": [
-          "make me  web browser that can go on any website",
-          "only the laptop"
+          "Disable monster"
         ]
       },
       "acceptanceCriteria": [
-        "The document title (frontend/index.html) reflects the new browser app name (not the previous mod menu title).",
-        "frontend/public/manifest.webmanifest name/short_name/description reflect the new browser app (not the previous mod menu/Quest/APK messaging)."
+        "Disable Monsters can be toggled on/off from the Mod Menu.",
+        "The toggle state persists per user and is restored after refresh/login.",
+        "The ModStatusBar shows a “NO MONSTERS” badge when enabled."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
+      "text": "Add a “Rainbow Background” visual effect toggle that, when enabled, applies a rainbow/animated background styling to the Mod Menu page without affecting functionality.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-7",
-          "msg-9"
+          "msg-6"
         ],
         "quotes": [
-          "a Laptop Web browser",
-          "only the laptop"
+          "make the backround Rainbow"
         ]
       },
       "acceptanceCriteria": [
-        "Browser chrome (top bar, buttons, input) uses a consistent style system (e.g., neutral ‘graphite’ UI with one accent color) and remains readable and accessible.",
-        "Layout is responsive for typical laptop widths and keeps the iframe usable (no overflow issues)."
+        "Rainbow Background can be toggled on/off from the Mod Menu.",
+        "When enabled, the Mod Menu page background visibly becomes rainbow/animated (or rainbow gradient).",
+        "When disabled, the page returns to the normal background."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Implement a Process Selector UI in the Mod Menu page using the existing backend process selector and available-process list APIs, allowing the user to select and persist a target process.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "make a process selecter"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Mod Menu page displays a process selector panel with a dropdown of available processes and a refresh action.",
+        "Selecting a process persists to the backend and is restored on reload.",
+        "If a previously selected process is missing, the UI clearly indicates it."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Implement an Item Spawner tool that supports creating and managing a user-defined list of items (add/remove/clear), persisted per user, and shows a log/history of spawn actions in the UI.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "item spawner (list create)"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Users can add items to a personal spawn list, remove items, and clear the list.",
+        "The spawn list is persisted per user and restored after refresh/login.",
+        "The UI shows a spawn log/history entries when spawning an item from the list."
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Add a Prefab Spawner that uses a prefab list (catalog) “from the game”, lets users browse/search prefabs, and add selected prefabs to the spawn list (or spawn directly), persisting chosen prefabs per user.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "make a prefab spawner with a list of prefabs from the game"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A prefab list UI exists with search/filter capability (by name/id/category/description).",
+        "A user can select a prefab and add it to their spawn list and/or trigger a spawn action.",
+        "The chosen prefab entries persist per user and are restored after refresh/login."
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Update the backend canister types and APIs so mod settings stored in the user profile align with the Mod Menu features (Fly, Super Speed, Super Jump, Disable Monsters) rather than the current placeholder field names, and ensure the frontend uses the updated fields end-to-end.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "Mod menu fly super speed Super jump ... Disable monster"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend Candid types expose mod settings fields that directly match the Mod Menu toggles (Fly, Super Speed, Super Jump, Disable Monsters).",
+        "Frontend reads/writes those fields without relying on the current placeholder semantic mapping.",
+        "Saving and loading a profile correctly round-trips mod settings values."
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Display a “Cactus Cowboy: Plants at War” cover image on the Mod Menu page (e.g., in the header/hero area) using a generated static asset under frontend/public/assets/generated.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-6"
+        ],
+        "quotes": [
+          "Make the Picture cactus cowboy plants at war game cover"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A cover image is present as a static asset under frontend/public/assets/generated and is rendered on the Mod Menu page.",
+        "The image is responsive (does not overflow on small screens) and has appropriate alt text in English."
       ]
     }
   ],
   "constraints": [
-    "Frontend must not edit files under frontend/src/components/ui (compose existing Shadcn components instead).",
-    "Frontend must not modify immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Backend must remain a single Motoko actor in backend/main.mo; do not introduce additional backend services."
+    "Backend must remain a single Motoko actor in backend/main.mo; add backend/migration.mo only if required by an actual stable-state upgrade need.",
+    "Do not modify frontend immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*.",
+    "Use English for all user-facing text."
   ],
   "nonGoals": [
-    "Implementing a fully unrestricted browser (bypassing sites that block iframe embedding).",
-    "VR mode, Quest Browser optimizations, or APK/TWA build/download flows.",
-    "WebSockets/real-time features, third-party auth providers, or external databases."
+    "Implementing real game memory injection/modding for “Cactus Cowboy: Plants at War” (this app only stores and presents mod/spawn settings).",
+    "Auto-detecting live game processes from the user’s device (processes are selected from the provided available-process list).",
+    "Adding third-party authentication providers beyond Internet Identity."
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Game cover art illustration featuring a cactus cowboy in a desert action/combat scene with a playful arcade shooter vibe, high contrast, poster-like composition (cactus-cowboy-plants-at-war-cover.dim_1024x1536.png)"
+    ],
     "edits": []
   }
 }

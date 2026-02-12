@@ -1,42 +1,81 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Build a simple laptop (2D) web browser-style app that loads external websites in an iframe, with basic navigation controls.",
-  "architectural_notes": [
-    "Use an iframe-based approach to display external websites; some sites may block being embedded due to X-Frame-Options/CSP."
-  ],
+  "summary": "Project to create a mod menu for \"Cactus Cowboy: Plants at War\" with gameplay cheats/toggles, item/prefab spawning tools, visual background effects, a process selector UI, and a requested game cover image.",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Game cover art illustration featuring a cactus cowboy in a desert action/combat scene with a playful arcade shooter vibe, high contrast, poster-like composition (cactus-cowboy-plants-at-war-cover.dim_1024x1536.png)",
   "existing_features": [
     {
-      "id": "feature-replace-the-current-mod-menu-authenticated-ui-with-a-laptop-only-2d-web-browser-style-interface-that-can-load-external-websites-inside-an-iframe-including-a-url-bar-and-basic-navigation-controls-back-forward-reload-go",
-      "title": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
+      "id": "feature-replace-the-current-browserpage-only-ui-with-a-new-mod-menu-page-for-cactus-cowboy-plants-at-war-that-exposes-fly-super-speed-super-jump-item-spawner-user-created-list-disable-monsters-rainbow-background-process-selector-and-prefab-spawner-from-a-prefab-list",
+      "title": "Replace the current BrowserPage-only UI with a new Mod Menu page for “Cactus Cowboy: Plants at War” that exposes: Fly, Super Speed, Super Jump, Item Spawner (user-created list), Disable Monsters, Rainbow Background, Process Selector, and Prefab Spawner (from a prefab list).",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-ensure-the-app-has-no-vr-mode-and-does-not-show-vr-quest-apk-mod-menu-ui-elements-the-experience-must-be-laptop-only-2d",
-      "title": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
+      "id": "feature-implement-fly-super-speed-and-super-jump-controls-in-the-mod-menu-ui-including-multipliers-for-speed-and-jump-and-persist-these-settings-per-user-authenticated-via-internet-identity",
+      "title": "Implement Fly, Super Speed, and Super Jump controls in the Mod Menu UI, including multipliers for speed and jump, and persist these settings per user (authenticated via Internet Identity).",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-app-s-shell-branding-to-match-the-laptop-web-browser-experience-html-title-and-pwa-manifest-name-description",
-      "title": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
+      "id": "feature-add-a-disable-monsters-toggle-in-the-mod-menu-ui-and-persist-it-per-user-profile",
+      "title": "Add a “Disable Monsters” toggle in the Mod Menu UI and persist it per user profile.",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-apply-a-coherent-visual-theme-suitable-for-a-laptop-web-browser-ui-colors-typography-spacing-component-styling-and-use-it-consistently-across-the-browser-page",
-      "title": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
+      "id": "feature-add-a-rainbow-background-visual-effect-toggle-that-when-enabled-applies-a-rainbow-animated-background-styling-to-the-mod-menu-page-without-affecting-functionality",
+      "title": "Add a “Rainbow Background” visual effect toggle that, when enabled, applies a rainbow/animated background styling to the Mod Menu page without affecting functionality.",
       "reqIds": [
         "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-process-selector-ui-in-the-mod-menu-page-using-the-existing-backend-process-selector-and-available-process-list-apis-allowing-the-user-to-select-and-persist-a-target-process",
+      "title": "Implement a Process Selector UI in the Mod Menu page using the existing backend process selector and available-process list APIs, allowing the user to select and persist a target process.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-item-spawner-tool-that-supports-creating-and-managing-a-user-defined-list-of-items-add-remove-clear-persisted-per-user-and-shows-a-log-history-of-spawn-actions-in-the-ui",
+      "title": "Implement an Item Spawner tool that supports creating and managing a user-defined list of items (add/remove/clear), persisted per user, and shows a log/history of spawn actions in the UI.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-prefab-spawner-that-uses-a-prefab-list-catalog-from-the-game-lets-users-browse-search-prefabs-and-add-selected-prefabs-to-the-spawn-list-or-spawn-directly-persisting-chosen-prefabs-per-user",
+      "title": "Add a Prefab Spawner that uses a prefab list (catalog) “from the game”, lets users browse/search prefabs, and add selected prefabs to the spawn list (or spawn directly), persisting chosen prefabs per user.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-backend-canister-types-and-apis-so-mod-settings-stored-in-the-user-profile-align-with-the-mod-menu-features-fly-super-speed-super-jump-disable-monsters-rather-than-the-current-placeholder-field-names-and-ensure-the-frontend-uses-the-updated-fields-end-to-end",
+      "title": "Update the backend canister types and APIs so mod settings stored in the user profile align with the Mod Menu features (Fly, Super Speed, Super Jump, Disable Monsters) rather than the current placeholder field names, and ensure the frontend uses the updated fields end-to-end.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-a-cactus-cowboy-plants-at-war-cover-image-on-the-mod-menu-page-e-g-in-the-header-hero-area-using-a-generated-static-asset-under-frontend-public-assets-generated",
+      "title": "Display a “Cactus Cowboy: Plants at War” cover image on the Mod Menu page (e.g., in the header/hero area) using a generated static asset under frontend/public/assets/generated.",
+      "reqIds": [
+        "REQ-9"
       ],
       "version": 1
     }
@@ -44,13 +83,66 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Implement a laptop-only (2D) web browser UI with URL bar, back/forward buttons, and an iframe to load external websites",
+      "summary": "Add mod menu for Cactus Cowboy: Plants at War (UI to control cheats/tools)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add Fly mode toggle/cheat",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Add Super Speed toggle/slider cheat",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add Super Jump toggle/slider cheat",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Add item spawner with user-created list (list create)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Add option to disable monsters (toggle)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Add rainbow background visual effect toggle",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Add a process selector UI (\"process selecter\")",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Create a prefab spawner with a list of prefabs from the game",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Create game cover picture for Cactus Cowboy: Plants at War",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
-  "projectName": "Laptop-only 2D web browser UI (URL bar + iframe navigation)",
+  "projectName": "Cactus Cowboy: Plants at War",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

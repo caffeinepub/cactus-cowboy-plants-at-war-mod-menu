@@ -1,37 +1,68 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-10T21:42:56.428Z",
-  "summary": "Diff implements a new laptop-style browser page with URL bar, Go/Enter navigation, back/forward history, and reload via iframe key; updates app shell branding (HTML title + manifest) and introduces a coherent “graphite” theme via CSS/Tailwind. No clear evidence in the diff that VR/auth/mod-menu flows are still part of the primary UI, since App now renders BrowserPage directly.",
-  "missing_requirements": [],
-  "hallucinated_features": [
+  "generatedAt": "2026-02-11T00:56:45.374Z",
+  "summary": "The diff implements a new Mod Menu page with mod toggles, multipliers, status bar, rainbow background CSS, backend-aligned mod settings types/APIs (plus a migration), and UI panels for item and prefab spawning. However, the required generated cover image asset is not evidenced as added, and the prefab catalog asset is referenced in summaries but not evidenced in the diff’s added files list. Several extra (non-requested) features/branding files also appear to have been added/changed.",
+  "missing_requirements": [
     {
-      "description": "Footer attribution/promo link (Caffeine referral) and decorative text not requested in the BuildRequest.",
-      "reason": "BuildRequest does not ask for any external attribution/footer marketing; BrowserPage includes a footer with a Caffeine AI referral URL and additional text.",
+      "id": "REQ-9",
+      "requirement": "Add a “Cactus Cowboy: Plants at War” cover image as a generated static asset under frontend/public/assets/generated and render it on the Mod Menu page with responsive styling and English alt text.",
+      "reason": "The Mod Menu page references the cover image path, but the diff summary does not show the required static asset being added under frontend/public/assets/generated (only 3 files were added, and none are the image).",
       "evidence": [
-        "frontend/src/pages/BrowserPage.tsx"
+        "frontend/src/pages/ModMenuPage.tsx (references /assets/generated/cactus-cowboy-plants-at-war-cover.dim_1024x1536.png)",
+        "File diff summary header: \"Added: 3\" (no frontend/public/assets/generated/* image listed)"
       ]
     },
     {
-      "description": "Use of a heart symbol in user-facing footer text.",
-      "reason": "BuildRequest requires user-facing text be in English; while this is not non-English, it is additional unrequested user-facing content/decoration.",
+      "id": "REQ-7",
+      "requirement": "Add a Prefab Spawner using a prefab list/catalog “from the game” with search/filter, allowing add-to-list and/or spawn, persisting chosen prefabs per user.",
+      "reason": "The UI panel and hooks reference loading a static prefab catalog JSON from public assets, but the diff summary does not evidence that the prefab catalog asset itself was added/modified (only 3 files added, none are the JSON). If the catalog file did not already exist, the prefab list requirement would not be fully implemented end-to-end.",
       "evidence": [
-        "frontend/src/pages/BrowserPage.tsx"
+        "frontend/src/components/PrefabSpawnerPanel.tsx (uses usePrefabCatalog for catalog-prefab search/filter)",
+        "frontend-file-summaries.txt (mentions frontend/public/assets/prefabs/cactus-cowboy-prefabs.json)",
+        "File diff summary header: \"Added: 3\" (no frontend/public/assets/prefabs/*.json listed)"
       ]
     }
   ],
-  "confidence": 0.74,
+  "hallucinated_features": [
+    {
+      "description": "Downloads/APK distribution guidance panel and related APK README assets.",
+      "reason": "Not requested in any REQ; BuildRequest is focused on mod menu UI, persistence, process selector, spawners, rainbow background, and cover image.",
+      "evidence": [
+        "frontend-file-summaries.txt (mentions frontend/src/components/DownloadsPanel.tsx and frontend/public/assets/apk/README.txt)"
+      ]
+    },
+    {
+      "description": "PWA/branding updates such as manifest changes beyond what was requested.",
+      "reason": "BuildRequest does not request PWA manifest updates; only requires a cover image and mod menu UI/features.",
+      "evidence": [
+        "frontend/index.html (adds/uses manifest.webmanifest and updates title)",
+        "frontend-file-summaries.txt (mentions frontend/public/manifest.webmanifest)"
+      ]
+    },
+    {
+      "description": "Use of an additional mascot image in the profile setup dialog (cactus-cowboy-mascot.dim_768x768.png).",
+      "reason": "BuildRequest only specifies the Plants at War cover image asset; mascot image is not requested.",
+      "evidence": [
+        "frontend/src/components/ProfileSetupDialog.tsx (references /assets/generated/cactus-cowboy-mascot.dim_768x768.png)"
+      ]
+    }
+  ],
+  "confidence": 0.68,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
     "frontend/index.html",
-    "frontend/public/manifest.webmanifest",
     "frontend/src/App.tsx",
-    "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-    "frontend/src/components/AppToAppLauncherPanel.tsx",
-    "frontend/src/components/DownloadsPanel.tsx",
-    "frontend/src/hooks/useBrowserHistory.ts",
+    "frontend/src/components/ItemSpawnerPanel.tsx",
+    "frontend/src/components/ModStatusBar.tsx",
+    "frontend/src/components/PrefabSpawnerPanel.tsx",
+    "frontend/src/components/ProfileSetupDialog.tsx",
+    "frontend/src/hooks/useItemSpawner.ts",
+    "frontend/src/hooks/useModSettings.ts",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/index.css",
-    "frontend/src/pages/BrowserPage.tsx",
     "frontend/src/pages/ModMenuPage.tsx",
     "frontend/tailwind.config.js",
     "project_state.json"

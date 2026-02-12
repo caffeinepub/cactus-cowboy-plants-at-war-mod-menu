@@ -2,12 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-replace-the-current-mod-menu-authenticated-ui-with-a-laptop-only-2d-web-browser-style-interface-that-can-load-external-websites-inside-an-iframe-including-a-url-bar-and-basic-navigation-controls-back-forward-reload-go",
-      "featureTitle": "Replace the current mod-menu/authenticated UI with a laptop-only (2D) web-browser-style interface that can load external websites inside an iframe, including a URL bar and basic navigation controls (Back, Forward, Reload, Go).",
+      "featureId": "feature-replace-the-current-browserpage-only-ui-with-a-new-mod-menu-page-for-cactus-cowboy-plants-at-war-that-exposes-fly-super-speed-super-jump-item-spawner-user-created-list-disable-monsters-rainbow-background-process-selector-and-prefab-spawner-from-a-prefab-list",
+      "featureTitle": "Replace the current BrowserPage-only UI with a new Mod Menu page for “Cactus Cowboy: Plants at War” that exposes: Fly, Super Speed, Super Jump, Item Spawner (user-created list), Disable Monsters, Rainbow Background, Process Selector, and Prefab Spawner (from a prefab list).",
       "files": [
+        "frontend/index.html",
         "frontend/src/App.tsx",
-        "frontend/src/hooks/useBrowserHistory.ts",
-        "frontend/src/pages/BrowserPage.tsx"
+        "frontend/src/pages/ModMenuPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -23,14 +23,13 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-app-has-no-vr-mode-and-does-not-show-vr-quest-apk-mod-menu-ui-elements-the-experience-must-be-laptop-only-2d",
-      "featureTitle": "Ensure the app has no VR mode and does not show VR/Quest/APK/mod-menu UI elements; the experience must be laptop-only 2D.",
+      "featureId": "feature-implement-fly-super-speed-and-super-jump-controls-in-the-mod-menu-ui-including-multipliers-for-speed-and-jump-and-persist-these-settings-per-user-authenticated-via-internet-identity",
+      "featureTitle": "Implement Fly, Super Speed, and Super Jump controls in the Mod Menu UI, including multipliers for speed and jump, and persist these settings per user (authenticated via Internet Identity).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-        "frontend/src/components/AppToAppLauncherPanel.tsx",
-        "frontend/src/components/DownloadsPanel.tsx",
-        "frontend/src/index.css",
+        "frontend/src/components/ModStatusBar.tsx",
+        "frontend/src/components/ProfileSetupDialog.tsx",
+        "frontend/src/hooks/useModSettings.ts",
+        "frontend/src/hooks/useQueries.ts",
         "frontend/src/pages/ModMenuPage.tsx"
       ],
       "components": [
@@ -47,11 +46,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-update-the-app-s-shell-branding-to-match-the-laptop-web-browser-experience-html-title-and-pwa-manifest-name-description",
-      "featureTitle": "Update the app’s shell branding to match the laptop web browser experience (HTML title and PWA manifest name/description).",
+      "featureId": "feature-add-a-disable-monsters-toggle-in-the-mod-menu-ui-and-persist-it-per-user-profile",
+      "featureTitle": "Add a “Disable Monsters” toggle in the Mod Menu UI and persist it per user profile.",
       "files": [
-        "frontend/index.html",
-        "frontend/public/manifest.webmanifest"
+        "frontend/src/components/ModStatusBar.tsx",
+        "frontend/src/hooks/useModSettings.ts",
+        "frontend/src/pages/ModMenuPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -67,12 +67,12 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-apply-a-coherent-visual-theme-suitable-for-a-laptop-web-browser-ui-colors-typography-spacing-component-styling-and-use-it-consistently-across-the-browser-page",
-      "featureTitle": "Apply a coherent visual theme suitable for a laptop web browser UI (colors, typography, spacing, component styling) and use it consistently across the browser page.",
+      "featureId": "feature-add-a-rainbow-background-visual-effect-toggle-that-when-enabled-applies-a-rainbow-animated-background-styling-to-the-mod-menu-page-without-affecting-functionality",
+      "featureTitle": "Add a “Rainbow Background” visual effect toggle that, when enabled, applies a rainbow/animated background styling to the Mod Menu page without affecting functionality.",
       "files": [
+        "frontend/src/hooks/useModSettings.ts",
         "frontend/src/index.css",
-        "frontend/src/pages/BrowserPage.tsx",
-        "frontend/tailwind.config.js"
+        "frontend/src/pages/ModMenuPage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -84,6 +84,108 @@
       ],
       "testIds": [
         "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-process-selector-ui-in-the-mod-menu-page-using-the-existing-backend-process-selector-and-available-process-list-apis-allowing-the-user-to-select-and-persist-a-target-process",
+      "featureTitle": "Implement a Process Selector UI in the Mod Menu page using the existing backend process selector and available-process list APIs, allowing the user to select and persist a target process.",
+      "files": [
+        "frontend/src/pages/ModMenuPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-an-item-spawner-tool-that-supports-creating-and-managing-a-user-defined-list-of-items-add-remove-clear-persisted-per-user-and-shows-a-log-history-of-spawn-actions-in-the-ui",
+      "featureTitle": "Implement an Item Spawner tool that supports creating and managing a user-defined list of items (add/remove/clear), persisted per user, and shows a log/history of spawn actions in the UI.",
+      "files": [
+        "frontend/src/components/ItemSpawnerPanel.tsx",
+        "frontend/src/hooks/useItemSpawner.ts",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/ModMenuPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-prefab-spawner-that-uses-a-prefab-list-catalog-from-the-game-lets-users-browse-search-prefabs-and-add-selected-prefabs-to-the-spawn-list-or-spawn-directly-persisting-chosen-prefabs-per-user",
+      "featureTitle": "Add a Prefab Spawner that uses a prefab list (catalog) “from the game”, lets users browse/search prefabs, and add selected prefabs to the spawn list (or spawn directly), persisting chosen prefabs per user.",
+      "files": [
+        "frontend/src/components/PrefabSpawnerPanel.tsx",
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/ModMenuPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-backend-canister-types-and-apis-so-mod-settings-stored-in-the-user-profile-align-with-the-mod-menu-features-fly-super-speed-super-jump-disable-monsters-rather-than-the-current-placeholder-field-names-and-ensure-the-frontend-uses-the-updated-fields-end-to-end",
+      "featureTitle": "Update the backend canister types and APIs so mod settings stored in the user profile align with the Mod Menu features (Fly, Super Speed, Super Jump, Disable Monsters) rather than the current placeholder field names, and ensure the frontend uses the updated fields end-to-end.",
+      "files": [
+        "frontend/src/components/ModStatusBar.tsx",
+        "frontend/src/components/ProfileSetupDialog.tsx",
+        "frontend/src/hooks/useModSettings.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-a-cactus-cowboy-plants-at-war-cover-image-on-the-mod-menu-page-e-g-in-the-header-hero-area-using-a-generated-static-asset-under-frontend-public-assets-generated",
+      "featureTitle": "Display a “Cactus Cowboy: Plants at War” cover image on the Mod Menu page (e.g., in the header/hero area) using a generated static asset under frontend/public/assets/generated.",
+      "files": [
+        "frontend/src/pages/ModMenuPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-9"
       ],
       "confidence": "high"
     }

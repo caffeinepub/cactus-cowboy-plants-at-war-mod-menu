@@ -1,11 +1,12 @@
-import { BrowserPage } from './pages/BrowserPage';
+import { AuthGate } from './components/AuthGate';
+import { ModMenuPage } from './pages/ModMenuPage';
 import { Toaster } from '@/components/ui/sonner';
 
 export default function App() {
   return (
-    <>
-      <BrowserPage />
+    <AuthGate>
+      <ModMenuPage />
       <Toaster />
-    </>
+    </AuthGate>
   );
 }

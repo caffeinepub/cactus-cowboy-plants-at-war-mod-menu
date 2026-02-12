@@ -31,14 +31,14 @@ export function ModStatusBar() {
           {settings.superSpeed && (
             <Badge variant="default" className="font-bold">
               <Zap className="mr-1 h-3 w-3" />
-              SPEED {settings.speedMultiplier}x
+              SPEED {settings.speedMultiplier.toFixed(1)}x
             </Badge>
           )}
           
           {settings.superJump && (
             <Badge variant="default" className="font-bold">
               <ArrowUp className="mr-1 h-3 w-3" />
-              JUMP {settings.jumpMultiplier}x
+              JUMP {settings.jumpMultiplier.toFixed(1)}x
             </Badge>
           )}
           

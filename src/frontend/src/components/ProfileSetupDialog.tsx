@@ -21,12 +21,21 @@ export function ProfileSetupDialog() {
     try {
       await saveProfile({
         name: name.trim(),
-        itemSpawner: { items: [] },
+        itemSpawner: { 
+          items: [],
+          spawnHistory: [],
+        },
+        prefabSpawner: {
+          prefabs: [],
+          spawnHistory: [],
+        },
         modSettings: {
-          infiniteHealthEnabled: false,
-          infiniteManaEnabled: false,
-          noclipEnabled: false,
-          moonJumpEnabled: false,
+          flyEnabled: false,
+          superSpeedEnabled: false,
+          superSpeedMultiplier: 1.0,
+          superJumpEnabled: false,
+          superJumpMultiplier: 1.0,
+          disableMonsters: false,
         },
         processSelector: {
           selectedProcess: undefined,

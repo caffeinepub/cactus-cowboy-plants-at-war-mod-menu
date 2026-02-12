@@ -89,8 +89,17 @@ export class ExternalBlob {
         return this;
     }
 }
+export interface PrefabSpawner {
+    prefabs: Array<Prefab>;
+    spawnHistory: Array<string>;
+}
 export interface ItemSpawner {
+    spawnHistory: Array<string>;
     items: Array<Item>;
+}
+export interface AvailableProcesses {
+    lastUpdated: Time;
+    processes: Array<string>;
 }
 export type Time = bigint;
 export interface Item {
@@ -98,10 +107,12 @@ export interface Item {
     typeId: number;
 }
 export interface ModSettings {
-    noclipEnabled: boolean;
-    infiniteManaEnabled: boolean;
-    moonJumpEnabled: boolean;
-    infiniteHealthEnabled: boolean;
+    superSpeedEnabled: boolean;
+    superJumpMultiplier: number;
+    disableMonsters: boolean;
+    superJumpEnabled: boolean;
+    flyEnabled: boolean;
+    superSpeedMultiplier: number;
 }
 export interface ProcessSelector {
     selectedProcess?: string;
@@ -110,11 +121,13 @@ export interface UserProfile {
     modSettings: ModSettings;
     processSelector: ProcessSelector;
     name: string;
+    prefabSpawner: PrefabSpawner;
     itemSpawner: ItemSpawner;
 }
-export interface AvailableProcesses {
-    lastUpdated: Time;
-    processes: Array<string>;
+export interface Prefab {
+    name: string;
+    position: string;
+    prefabId: string;
 }
 export enum UserRole {
     admin = "admin",
@@ -124,20 +137,27 @@ export enum UserRole {
 export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addItem(item: Item): Promise<void>;
+    addPrefab(prefab: Prefab): Promise<void>;
+    addPrefabSpawnHistory(record: string): Promise<void>;
+    addSpawnHistory(record: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    clearItems(): Promise<void>;
+    clearPrefabs(): Promise<void>;
     getAvailableProcesses(): Promise<AvailableProcesses>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getItemSpawner(): Promise<ItemSpawner | null>;
     getModSettings(): Promise<ModSettings>;
+    getPrefabSpawner(): Promise<PrefabSpawner | null>;
     getProcessSelector(): Promise<ProcessSelector>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setProcessSelector(processSelector: ProcessSelector): Promise<void>;
     updateAvailableProcesses(processes: Array<string>): Promise<void>;
+    updateModSettings(newSettings: ModSettings): Promise<void>;
 }
-import type { ItemSpawner as _ItemSpawner, ModSettings as _ModSettings, ProcessSelector as _ProcessSelector, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
+import type { ItemSpawner as _ItemSpawner, ModSettings as _ModSettings, PrefabSpawner as _PrefabSpawner, ProcessSelector as _ProcessSelector, UserProfile as _UserProfile, UserRole as _UserRole } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initializeAccessControlWithSecret(arg0: string): Promise<void> {
@@ -168,6 +188,48 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async addPrefab(arg0: Prefab): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addPrefab(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addPrefab(arg0);
+            return result;
+        }
+    }
+    async addPrefabSpawnHistory(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addPrefabSpawnHistory(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addPrefabSpawnHistory(arg0);
+            return result;
+        }
+    }
+    async addSpawnHistory(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addSpawnHistory(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addSpawnHistory(arg0);
+            return result;
+        }
+    }
     async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
         if (this.processError) {
             try {
@@ -179,6 +241,34 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.assignCallerUserRole(arg0, to_candid_UserRole_n1(this._uploadFile, this._downloadFile, arg1));
+            return result;
+        }
+    }
+    async clearItems(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.clearItems();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.clearItems();
+            return result;
+        }
+    }
+    async clearPrefabs(): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.clearPrefabs();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.clearPrefabs();
             return result;
         }
     }
@@ -252,6 +342,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async getPrefabSpawner(): Promise<PrefabSpawner | null> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getPrefabSpawner();
+                return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getPrefabSpawner();
+            return from_candid_opt_n12(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getProcessSelector(): Promise<ProcessSelector> {
         if (this.processError) {
             try {
@@ -297,28 +401,28 @@ export class Backend implements backendInterface {
     async saveCallerUserProfile(arg0: UserProfile): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n12(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n13(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n12(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.saveCallerUserProfile(to_candid_UserProfile_n13(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
     async setProcessSelector(arg0: ProcessSelector): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.setProcessSelector(to_candid_ProcessSelector_n14(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.setProcessSelector(to_candid_ProcessSelector_n15(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.setProcessSelector(to_candid_ProcessSelector_n14(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.setProcessSelector(to_candid_ProcessSelector_n15(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
@@ -336,6 +440,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async updateModSettings(arg0: ModSettings): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateModSettings(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateModSettings(arg0);
+            return result;
+        }
+    }
 }
 function from_candid_ProcessSelector_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _ProcessSelector): ProcessSelector {
     return from_candid_record_n7(_uploadFile, _downloadFile, value);
@@ -349,6 +467,9 @@ function from_candid_UserRole_n9(_uploadFile: (file: ExternalBlob) => Promise<Ui
 function from_candid_opt_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_ItemSpawner]): ItemSpawner | null {
     return value.length === 0 ? null : value[0];
 }
+function from_candid_opt_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_PrefabSpawner]): PrefabSpawner | null {
+    return value.length === 0 ? null : value[0];
+}
 function from_candid_opt_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_UserProfile]): UserProfile | null {
     return value.length === 0 ? null : from_candid_UserProfile_n4(_uploadFile, _downloadFile, value[0]);
 }
@@ -359,17 +480,20 @@ function from_candid_record_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint
     modSettings: _ModSettings;
     processSelector: _ProcessSelector;
     name: string;
+    prefabSpawner: _PrefabSpawner;
     itemSpawner: _ItemSpawner;
 }): {
     modSettings: ModSettings;
     processSelector: ProcessSelector;
     name: string;
+    prefabSpawner: PrefabSpawner;
     itemSpawner: ItemSpawner;
 } {
     return {
         modSettings: value.modSettings,
         processSelector: from_candid_ProcessSelector_n6(_uploadFile, _downloadFile, value.processSelector),
         name: value.name,
+        prefabSpawner: value.prefabSpawner,
         itemSpawner: value.itemSpawner
     };
 }
@@ -391,34 +515,37 @@ function from_candid_variant_n10(_uploadFile: (file: ExternalBlob) => Promise<Ui
 }): UserRole {
     return "admin" in value ? UserRole.admin : "user" in value ? UserRole.user : "guest" in value ? UserRole.guest : value;
 }
-function to_candid_ProcessSelector_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProcessSelector): _ProcessSelector {
-    return to_candid_record_n15(_uploadFile, _downloadFile, value);
+function to_candid_ProcessSelector_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: ProcessSelector): _ProcessSelector {
+    return to_candid_record_n16(_uploadFile, _downloadFile, value);
 }
-function to_candid_UserProfile_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserProfile): _UserProfile {
-    return to_candid_record_n13(_uploadFile, _downloadFile, value);
+function to_candid_UserProfile_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserProfile): _UserProfile {
+    return to_candid_record_n14(_uploadFile, _downloadFile, value);
 }
 function to_candid_UserRole_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: UserRole): _UserRole {
     return to_candid_variant_n2(_uploadFile, _downloadFile, value);
 }
-function to_candid_record_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n14(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     modSettings: ModSettings;
     processSelector: ProcessSelector;
     name: string;
+    prefabSpawner: PrefabSpawner;
     itemSpawner: ItemSpawner;
 }): {
     modSettings: _ModSettings;
     processSelector: _ProcessSelector;
     name: string;
+    prefabSpawner: _PrefabSpawner;
     itemSpawner: _ItemSpawner;
 } {
     return {
         modSettings: value.modSettings,
-        processSelector: to_candid_ProcessSelector_n14(_uploadFile, _downloadFile, value.processSelector),
+        processSelector: to_candid_ProcessSelector_n15(_uploadFile, _downloadFile, value.processSelector),
         name: value.name,
+        prefabSpawner: value.prefabSpawner,
         itemSpawner: value.itemSpawner
     };
 }
-function to_candid_record_n15(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function to_candid_record_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     selectedProcess?: string;
 }): {
     selectedProcess: [] | [string];

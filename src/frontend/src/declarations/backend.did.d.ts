@@ -15,12 +15,26 @@ export interface AvailableProcesses {
   'processes' : Array<string>,
 }
 export interface Item { 'name' : string, 'typeId' : number }
-export interface ItemSpawner { 'items' : Array<Item> }
+export interface ItemSpawner {
+  'spawnHistory' : Array<string>,
+  'items' : Array<Item>,
+}
 export interface ModSettings {
-  'noclipEnabled' : boolean,
-  'infiniteManaEnabled' : boolean,
-  'moonJumpEnabled' : boolean,
-  'infiniteHealthEnabled' : boolean,
+  'superSpeedEnabled' : boolean,
+  'superJumpMultiplier' : number,
+  'disableMonsters' : boolean,
+  'superJumpEnabled' : boolean,
+  'flyEnabled' : boolean,
+  'superSpeedMultiplier' : number,
+}
+export interface Prefab {
+  'name' : string,
+  'position' : string,
+  'prefabId' : string,
+}
+export interface PrefabSpawner {
+  'prefabs' : Array<Prefab>,
+  'spawnHistory' : Array<string>,
 }
 export interface ProcessSelector { 'selectedProcess' : [] | [string] }
 export type Time = bigint;
@@ -28,6 +42,7 @@ export interface UserProfile {
   'modSettings' : ModSettings,
   'processSelector' : ProcessSelector,
   'name' : string,
+  'prefabSpawner' : PrefabSpawner,
   'itemSpawner' : ItemSpawner,
 }
 export type UserRole = { 'admin' : null } |
@@ -36,18 +51,25 @@ export type UserRole = { 'admin' : null } |
 export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addItem' : ActorMethod<[Item], undefined>,
+  'addPrefab' : ActorMethod<[Prefab], undefined>,
+  'addPrefabSpawnHistory' : ActorMethod<[string], undefined>,
+  'addSpawnHistory' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'clearItems' : ActorMethod<[], undefined>,
+  'clearPrefabs' : ActorMethod<[], undefined>,
   'getAvailableProcesses' : ActorMethod<[], AvailableProcesses>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getItemSpawner' : ActorMethod<[], [] | [ItemSpawner]>,
   'getModSettings' : ActorMethod<[], ModSettings>,
+  'getPrefabSpawner' : ActorMethod<[], [] | [PrefabSpawner]>,
   'getProcessSelector' : ActorMethod<[], ProcessSelector>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'setProcessSelector' : ActorMethod<[ProcessSelector], undefined>,
   'updateAvailableProcesses' : ActorMethod<[Array<string>], undefined>,
+  'updateModSettings' : ActorMethod<[ModSettings], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

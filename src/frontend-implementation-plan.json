@@ -1,119 +1,254 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Laptop-only 2D web browser UI (URL bar + iframe navigation)",
+  "title": "Cactus Cowboy: Plants at War — Mod Menu UI (frontend-only)",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Implement a desktop/laptop 2D browser-like UI with URL bar, iframe navigation, and app-managed history controls.",
+      "summary": "Replace the BrowserPage-only UI with a new authenticated Mod Menu page containing all required mod controls and spawner tools.",
       "acceptanceCriteria": [
-        "App renders a browser-like layout on desktop/laptop screens with a top navigation bar and a main content area.",
-        "URL input supports entering a domain or full URL; if protocol is missing, the app prepends https:// before loading.",
-        "Clicking Go (or pressing Enter in the URL bar) loads the requested URL in an iframe.",
-        "Back/Forward navigate through the app-managed history of visited URLs (those entered via the URL bar).",
-        "Reload re-loads the currently displayed URL in the iframe.",
-        "All user-facing text is in English."
+        "Launching the app shows a Mod Menu page (not the iframe browser UI).",
+        "The Mod Menu page contains controls for Fly, Super Speed, Super Jump, Disable Monsters, Rainbow Background, Process Selector, and spawner tools.",
+        "All user-facing text on the Mod Menu page is in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/BrowserPage.tsx",
-          "operation": "create",
-          "description": "Create the primary laptop-only 2D browser page: top chrome (Back/Forward/Reload, URL input, Go) and a main iframe area. Use shadcn/ui components (e.g., Button, Input) to build the chrome controls; verify the component's usage instructions before implementing. Implement URL normalization (prepend https:// when protocol missing), Enter-to-Go, app-managed history stack, and Reload via iframe remount/key update without altering the URL."
-        },
-        {
-          "path": "frontend/src/hooks/useBrowserHistory.ts",
-          "operation": "create",
-          "description": "Add a small hook to manage app-level navigation state: current URL, back/forward stacks, and helper actions (go/back/forward/reload trigger). Keep it isolated to frontend state (no authentication, no backend calls)."
-        },
-        {
           "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wire the new BrowserPage into the app as the primary UI (replace current AuthGate + ModMenuPage render). Ensure the BrowserPage is the default rendered view so it is reachable with no additional navigation steps."
+          "description": "Replace BrowserPage with an authenticated Mod Menu shell by wrapping the app in AuthGate and rendering ModMenuPage as the primary UI. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "operation": "modify",
+          "description": "Implement the Mod Menu page UI for “Cactus Cowboy: Plants at War”, including sections for movement cheats, monster toggle, rainbow background toggle, process selector, and spawner tools; render ModStatusBar at the top. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Update the document title from the generic browser title to reflect the Cactus Cowboy mod menu. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Remove VR/Quest/APK/mod-menu/authentication gating from the primary UI so the experience is laptop-only 2D.",
+      "summary": "Implement Fly, Super Speed, and Super Jump controls with multipliers, persisted per authenticated user, and reflected in the ModStatusBar.",
       "acceptanceCriteria": [
-        "No VR-specific panels, downloads/APK instructions, app-to-app launcher, mod menu, or Internet Identity login screens are presented in the primary UI flow.",
-        "The UI works in a normal desktop browser without requiring authentication to access the browser interface."
+        "Fly, Super Speed, and Super Jump each have a toggle control.",
+        "Super Speed has a multiplier control; Super Jump has a multiplier control.",
+        "Toggling/adjusting settings persists and is restored after refresh/login.",
+        "The ModStatusBar reflects the enabled state and shows multiplier values for speed/jump."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Remove VR browser markers/styling toggles and remove authentication gating from the primary flow (do not render AuthGate). Ensure no Quest/VR-specific UI is conditionally shown and the browser interface is accessible immediately on load."
+          "description": "Add React Query hooks for reading and updating mod settings using the existing backend actor methods (getModSettings/updateModSettings), and ensure cache invalidation keeps ModStatusBar and Mod Menu controls in sync after saves. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/index.css",
+          "path": "frontend/src/hooks/useModSettings.ts",
           "operation": "modify",
-          "description": "Remove/neutralize VR-specific CSS rules (e.g., selectors based on a VR marker attribute) and any Quest/VR optimizations that alter layout/typography for VR mode, ensuring the experience remains standard desktop 2D."
+          "description": "Update mod settings syncing to use the backend’s real ModSettings fields (flyEnabled/superSpeedEnabled/superJumpEnabled plus multipliers) for per-user persistence; keep Rainbow Background as a frontend-only preference. Remove placeholder-field semantic mapping. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ModStatusBar.tsx",
+          "operation": "modify",
+          "description": "Ensure the status badges reflect the enabled state and display speed/jump multiplier values sourced from the updated useModSettings implementation. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/ModMenuPage.tsx",
-          "operation": "delete",
-          "description": "Delete the mod-menu page implementation to prevent mod-menu UI from being shipped/accidentally wired back into the primary experience."
+          "operation": "modify",
+          "description": "Add UI controls (toggles + multiplier inputs) for Fly, Super Speed, and Super Jump and wire them to useModSettings updates. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/components/DownloadsPanel.tsx",
-          "operation": "delete",
-          "description": "Delete the APK/downloads UI panel (Quest/APK messaging) so it cannot appear in the primary UI flow."
-        },
-        {
-          "path": "frontend/src/components/ApkBuildInstructionsOverlay.tsx",
-          "operation": "delete",
-          "description": "Delete the APK/TWA build instructions overlay component to remove APK/Quest instructions from the app UI surface."
-        },
-        {
-          "path": "frontend/src/components/AppToAppLauncherPanel.tsx",
-          "operation": "delete",
-          "description": "Delete the app-to-app launcher panel (Android/Quest deep-link switching UI) to keep the experience laptop-only 2D."
+          "path": "frontend/src/components/ProfileSetupDialog.tsx",
+          "operation": "modify",
+          "description": "Update default profile initialization to align with the current backend UserProfile/ModSettings shape (including toggles and multipliers) so new users start with valid persisted settings. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Update document title and PWA manifest branding to match the laptop web browser experience.",
+      "summary": "Add a Disable Monsters toggle to the Mod Menu UI, persisted per authenticated user, and reflected in the ModStatusBar.",
       "acceptanceCriteria": [
-        "The document title (frontend/index.html) reflects the new browser app name (not the previous mod menu title).",
-        "frontend/public/manifest.webmanifest name/short_name/description reflect the new browser app (not the previous mod menu/Quest/APK messaging)."
+        "Disable Monsters can be toggled on/off from the Mod Menu.",
+        "The toggle state persists per user and is restored after refresh/login.",
+        "The ModStatusBar shows a “NO MONSTERS” badge when enabled."
       ],
       "file_operations": [
         {
-          "path": "frontend/index.html",
+          "path": "frontend/src/hooks/useModSettings.ts",
           "operation": "modify",
-          "description": "Update the HTML document title to a browser-style app name (English) and remove any mod-menu-specific naming."
+          "description": "Extend the persisted backend-synced settings to include disableMonsters (disableMonsters boolean) and ensure it round-trips with the backend per-user state. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/public/manifest.webmanifest",
+          "path": "frontend/src/pages/ModMenuPage.tsx",
           "operation": "modify",
-          "description": "Update manifest name/short_name/description to the new laptop web browser experience (English). Remove mod-menu/VR/Quest/APK wording from description and update shortcuts metadata accordingly to match the browser app."
+          "description": "Add a Disable Monsters toggle control and wire it to the persisted mod settings update flow. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ModStatusBar.tsx",
+          "operation": "modify",
+          "description": "Confirm the “NO MONSTERS” badge displays when disableMonsters is enabled (driven by useModSettings). Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Apply a coherent, consistent, responsive laptop web browser visual theme across the browser page.",
+      "summary": "Add a Rainbow Background visual effect toggle that applies an animated/rainbow background to the Mod Menu page without impacting functionality.",
       "acceptanceCriteria": [
-        "Browser chrome (top bar, buttons, input) uses a consistent style system (e.g., neutral ‘graphite’ UI with one accent color) and remains readable and accessible.",
-        "Layout is responsive for typical laptop widths and keeps the iframe usable (no overflow issues)."
+        "Rainbow Background can be toggled on/off from the Mod Menu.",
+        "When enabled, the Mod Menu page background visibly becomes rainbow/animated (or rainbow gradient).",
+        "When disabled, the page returns to the normal background."
       ],
       "file_operations": [
         {
           "path": "frontend/src/index.css",
           "operation": "modify",
-          "description": "Adjust global CSS variables and base styles toward a neutral 'graphite' browser theme with a single accent color; ensure readable contrast, consistent spacing, and remove desert/rainbow background utilities from being the default page background if they interfere with a browser-like shell."
+          "description": "Add CSS classes/keyframes needed to support a rainbow/animated background effect that can be toggled via a class on the Mod Menu page container. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/tailwind.config.js",
+          "path": "frontend/src/pages/ModMenuPage.tsx",
           "operation": "modify",
-          "description": "Align Tailwind theme extensions with the new browser chrome styling needs (neutral palette + one accent, subtle shadows/borders). Keep changes compatible with existing shadcn/ui theming."
+          "description": "Add a Rainbow Background toggle and apply/remove the rainbow background styling class on the Mod Menu root container based on the toggle state. Verify the component's usage instructions before implementing."
         },
         {
-          "path": "frontend/src/pages/BrowserPage.tsx",
+          "path": "frontend/src/hooks/useModSettings.ts",
           "operation": "modify",
-          "description": "Refine BrowserPage layout/styling for a browser-like chrome: consistent button sizes, input styling, spacing, and a responsive layout that preserves a large iframe area without overflow. Use shadcn/ui components (e.g., Button, Input, Separator/Tooltip if available) for consistent styling; verify the component's usage instructions before implementing."
+          "description": "Persist the Rainbow Background toggle as a frontend-only preference (e.g., localStorage) and restore it on load without affecting backend-synced mod functionality. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Implement a Process Selector panel on the Mod Menu page using existing frontend hooks and UI, allowing selection, refresh, and restored selection display (including missing selection indication).",
+      "acceptanceCriteria": [
+        "The Mod Menu page displays a process selector panel with a dropdown of available processes and a refresh action.",
+        "Selecting a process persists to the backend and is restored on reload.",
+        "If a previously selected process is missing, the UI clearly indicates it."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "operation": "modify",
+          "description": "Render the existing ProcessSelectorPanel in the Mod Menu page as a dedicated section/panel. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ProcessSelectorPanel.tsx",
+          "operation": "modify",
+          "description": "Review and adjust copy/states if needed so missing selected-process indication is clear and all user-facing text remains in English (while keeping existing refresh and selection behavior). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Implement an Item Spawner tool for a user-defined item list with add/remove/clear, persisted per user, and show a spawn log/history in the UI.",
+      "acceptanceCriteria": [
+        "Users can add items to a personal spawn list, remove items, and clear the list.",
+        "The spawn list is persisted per user and restored after refresh/login.",
+        "The UI shows a spawn log/history entries when spawning an item from the list."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ItemSpawnerPanel.tsx",
+          "operation": "create",
+          "description": "Create an Item Spawner panel UI that supports adding items, removing individual items, clearing the list, and triggering a spawn action that appends a visible log entry/history. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useItemSpawner.ts",
+          "operation": "modify",
+          "description": "Update item spawner logic to: (1) read the persisted item list from backend-backed data, (2) support remove/clear actions (using existing backend-backed profile save or existing clearItems capability), and (3) write spawn history records to backend-backed history while also updating the UI immediately. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add/extend React Query hooks/mutations needed for item list and history management using existing backend actor methods (e.g., clearItems, addSpawnHistory, and/or saveCallerUserProfile for list edits) and invalidate relevant queries after mutations. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "operation": "modify",
+          "description": "Wire ItemSpawnerPanel into the Mod Menu page under a clearly labeled section so it is reachable and not orphaned. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Add a Prefab Spawner with a searchable prefab catalog, ability to add to spawn list and/or spawn directly, persisted per user, and restored on reload.",
+      "acceptanceCriteria": [
+        "A prefab list UI exists with search/filter capability (by name/id/category/description).",
+        "A user can select a prefab and add it to their spawn list and/or trigger a spawn action.",
+        "The chosen prefab entries persist per user and are restored after refresh/login."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/prefabs/cactus-cowboy-prefabs.json",
+          "operation": "create",
+          "description": "Create a static prefab catalog JSON file consumed by the prefab catalog query, containing entries with id/name and optional category/description to support searching and browsing. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/PrefabSpawnerPanel.tsx",
+          "operation": "create",
+          "description": "Create a Prefab Spawner panel that uses the prefab catalog (search/filter) and allows adding prefabs to the user’s persisted prefab list and/or spawning directly, with a visible spawn history list. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/PrefabListPanel.tsx",
+          "operation": "modify",
+          "description": "Extend the existing prefab list UI as needed to support selection actions (e.g., add to prefab spawn list / spawn) while preserving current search/filter behavior and English UI text. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add/extend React Query hooks/mutations for prefab list and history using existing backend actor methods (e.g., getPrefabSpawner, addPrefab, clearPrefabs, addPrefabSpawnHistory, and/or saveCallerUserProfile for list edits) and invalidate relevant caches after updates. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "operation": "modify",
+          "description": "Wire PrefabSpawnerPanel (and/or the enhanced PrefabListPanel) into the Mod Menu page so the prefab catalog and prefab spawner functionality is accessible. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Update the frontend end-to-end to use mod settings fields that match the Mod Menu features (Fly, Super Speed, Super Jump, Disable Monsters) and stop relying on placeholder semantic mapping.",
+      "acceptanceCriteria": [
+        "Backend Candid types expose mod settings fields that directly match the Mod Menu toggles (Fly, Super Speed, Super Jump, Disable Monsters).",
+        "Frontend reads/writes those fields without relying on the current placeholder semantic mapping.",
+        "Saving and loading a profile correctly round-trips mod settings values."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useModSettings.ts",
+          "operation": "modify",
+          "description": "Remove placeholder-field mapping and use the current backend ModSettings shape directly (including enabled flags and multipliers), ensuring reads/writes round-trip correctly through the frontend’s data flow. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ProfileSetupDialog.tsx",
+          "operation": "modify",
+          "description": "Ensure new profile creation uses the correct mod settings field names and includes all required mod settings defaults so round-trips work immediately after setup. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/ModStatusBar.tsx",
+          "operation": "modify",
+          "description": "Confirm status display reads the new settings fields (including multipliers) and does not depend on legacy placeholder semantics. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Display a “Cactus Cowboy: Plants at War” cover image on the Mod Menu page using a generated static asset under frontend/public/assets/generated.",
+      "acceptanceCriteria": [
+        "A cover image is present as a static asset under frontend/public/assets/generated and is rendered on the Mod Menu page.",
+        "The image is responsive (does not overflow on small screens) and has appropriate alt text in English."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/cactus-cowboy-plants-at-war-cover.dim_1024x1536.png",
+          "operation": "create",
+          "description": "Add the generated game cover art asset at the required path so it can be rendered as a static image. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/pages/ModMenuPage.tsx",
+          "operation": "modify",
+          "description": "Render the cover image in the Mod Menu header/hero area using the static asset at frontend/public/assets/generated/cactus-cowboy-plants-at-war-cover.dim_1024x1536.png, ensuring responsive sizing and English alt text. Verify the component's usage instructions before implementing."
         }
       ]
     }

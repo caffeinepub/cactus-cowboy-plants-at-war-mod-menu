@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, ProcessSelector, AvailableProcesses } from '../backend';
+import type { UserProfile, ProcessSelector, AvailableProcesses, ModSettings, Item, Prefab } from '../backend';
 
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
@@ -37,6 +37,21 @@ export function useSaveCallerUserProfile() {
   });
 }
 
+export function useUpdateModSettings() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (settings: ModSettings) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateModSettings(settings);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
 export function useGetItemSpawner() {
   const { actor, isFetching: actorFetching } = useActor();
 
@@ -45,7 +60,7 @@ export function useGetItemSpawner() {
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
       const result = await actor.getItemSpawner();
-      return result || { items: [] };
+      return result || { items: [], spawnHistory: [] };
     },
     enabled: !!actor && !actorFetching,
   });
@@ -64,6 +79,63 @@ export function useAddItem() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['itemSpawner'] });
       queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
+export function useClearItems() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.clearItems();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['itemSpawner'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
+export function useRemoveItem() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (itemName: string) => {
+      if (!actor) throw new Error('Actor not available');
+      const profile = await actor.getCallerUserProfile();
+      if (!profile) throw new Error('Profile not found');
+      
+      const updatedItems = profile.itemSpawner.items.filter(item => item.name !== itemName);
+      await actor.saveCallerUserProfile({
+        ...profile,
+        itemSpawner: {
+          ...profile.itemSpawner,
+          items: updatedItems,
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['itemSpawner'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
+export function useAddSpawnHistory() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (record: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.addSpawnHistory(record);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['itemSpawner'] });
     },
   });
 }
@@ -108,7 +180,68 @@ export function useGetAvailableProcesses() {
       return actor.getAvailableProcesses();
     },
     enabled: !!actor && !actorFetching,
-    refetchInterval: 30000, // Poll every 30 seconds
+    refetchInterval: 30000,
     retry: false,
+  });
+}
+
+export function useGetPrefabSpawner() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery({
+    queryKey: ['prefabSpawner'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      const result = await actor.getPrefabSpawner();
+      return result || { prefabs: [], spawnHistory: [] };
+    },
+    enabled: !!actor && !actorFetching,
+  });
+}
+
+export function useAddPrefab() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (prefab: Prefab) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.addPrefab(prefab);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['prefabSpawner'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
+export function useClearPrefabs() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.clearPrefabs();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['prefabSpawner'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
+export function useAddPrefabSpawnHistory() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (record: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.addPrefabSpawnHistory(record);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['prefabSpawner'] });
+    },
   });
 }

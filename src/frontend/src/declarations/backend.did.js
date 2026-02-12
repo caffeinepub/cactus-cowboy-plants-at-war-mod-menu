@@ -9,6 +9,11 @@
 import { IDL } from '@icp-sdk/core/candid';
 
 export const Item = IDL.Record({ 'name' : IDL.Text, 'typeId' : IDL.Nat32 });
+export const Prefab = IDL.Record({
+  'name' : IDL.Text,
+  'position' : IDL.Text,
+  'prefabId' : IDL.Text,
+});
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
@@ -20,31 +25,47 @@ export const AvailableProcesses = IDL.Record({
   'processes' : IDL.Vec(IDL.Text),
 });
 export const ModSettings = IDL.Record({
-  'noclipEnabled' : IDL.Bool,
-  'infiniteManaEnabled' : IDL.Bool,
-  'moonJumpEnabled' : IDL.Bool,
-  'infiniteHealthEnabled' : IDL.Bool,
+  'superSpeedEnabled' : IDL.Bool,
+  'superJumpMultiplier' : IDL.Float64,
+  'disableMonsters' : IDL.Bool,
+  'superJumpEnabled' : IDL.Bool,
+  'flyEnabled' : IDL.Bool,
+  'superSpeedMultiplier' : IDL.Float64,
 });
 export const ProcessSelector = IDL.Record({
   'selectedProcess' : IDL.Opt(IDL.Text),
 });
-export const ItemSpawner = IDL.Record({ 'items' : IDL.Vec(Item) });
+export const PrefabSpawner = IDL.Record({
+  'prefabs' : IDL.Vec(Prefab),
+  'spawnHistory' : IDL.Vec(IDL.Text),
+});
+export const ItemSpawner = IDL.Record({
+  'spawnHistory' : IDL.Vec(IDL.Text),
+  'items' : IDL.Vec(Item),
+});
 export const UserProfile = IDL.Record({
   'modSettings' : ModSettings,
   'processSelector' : ProcessSelector,
   'name' : IDL.Text,
+  'prefabSpawner' : PrefabSpawner,
   'itemSpawner' : ItemSpawner,
 });
 
 export const idlService = IDL.Service({
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
   'addItem' : IDL.Func([Item], [], []),
+  'addPrefab' : IDL.Func([Prefab], [], []),
+  'addPrefabSpawnHistory' : IDL.Func([IDL.Text], [], []),
+  'addSpawnHistory' : IDL.Func([IDL.Text], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'clearItems' : IDL.Func([], [], []),
+  'clearPrefabs' : IDL.Func([], [], []),
   'getAvailableProcesses' : IDL.Func([], [AvailableProcesses], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getItemSpawner' : IDL.Func([], [IDL.Opt(ItemSpawner)], ['query']),
   'getModSettings' : IDL.Func([], [ModSettings], ['query']),
+  'getPrefabSpawner' : IDL.Func([], [IDL.Opt(PrefabSpawner)], ['query']),
   'getProcessSelector' : IDL.Func([], [ProcessSelector], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
@@ -55,12 +76,18 @@ export const idlService = IDL.Service({
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'setProcessSelector' : IDL.Func([ProcessSelector], [], []),
   'updateAvailableProcesses' : IDL.Func([IDL.Vec(IDL.Text)], [], []),
+  'updateModSettings' : IDL.Func([ModSettings], [], []),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
   const Item = IDL.Record({ 'name' : IDL.Text, 'typeId' : IDL.Nat32 });
+  const Prefab = IDL.Record({
+    'name' : IDL.Text,
+    'position' : IDL.Text,
+    'prefabId' : IDL.Text,
+  });
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
@@ -72,29 +99,45 @@ export const idlFactory = ({ IDL }) => {
     'processes' : IDL.Vec(IDL.Text),
   });
   const ModSettings = IDL.Record({
-    'noclipEnabled' : IDL.Bool,
-    'infiniteManaEnabled' : IDL.Bool,
-    'moonJumpEnabled' : IDL.Bool,
-    'infiniteHealthEnabled' : IDL.Bool,
+    'superSpeedEnabled' : IDL.Bool,
+    'superJumpMultiplier' : IDL.Float64,
+    'disableMonsters' : IDL.Bool,
+    'superJumpEnabled' : IDL.Bool,
+    'flyEnabled' : IDL.Bool,
+    'superSpeedMultiplier' : IDL.Float64,
   });
   const ProcessSelector = IDL.Record({ 'selectedProcess' : IDL.Opt(IDL.Text) });
-  const ItemSpawner = IDL.Record({ 'items' : IDL.Vec(Item) });
+  const PrefabSpawner = IDL.Record({
+    'prefabs' : IDL.Vec(Prefab),
+    'spawnHistory' : IDL.Vec(IDL.Text),
+  });
+  const ItemSpawner = IDL.Record({
+    'spawnHistory' : IDL.Vec(IDL.Text),
+    'items' : IDL.Vec(Item),
+  });
   const UserProfile = IDL.Record({
     'modSettings' : ModSettings,
     'processSelector' : ProcessSelector,
     'name' : IDL.Text,
+    'prefabSpawner' : PrefabSpawner,
     'itemSpawner' : ItemSpawner,
   });
   
   return IDL.Service({
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
     'addItem' : IDL.Func([Item], [], []),
+    'addPrefab' : IDL.Func([Prefab], [], []),
+    'addPrefabSpawnHistory' : IDL.Func([IDL.Text], [], []),
+    'addSpawnHistory' : IDL.Func([IDL.Text], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'clearItems' : IDL.Func([], [], []),
+    'clearPrefabs' : IDL.Func([], [], []),
     'getAvailableProcesses' : IDL.Func([], [AvailableProcesses], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getItemSpawner' : IDL.Func([], [IDL.Opt(ItemSpawner)], ['query']),
     'getModSettings' : IDL.Func([], [ModSettings], ['query']),
+    'getPrefabSpawner' : IDL.Func([], [IDL.Opt(PrefabSpawner)], ['query']),
     'getProcessSelector' : IDL.Func([], [ProcessSelector], ['query']),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
@@ -105,6 +148,7 @@ export const idlFactory = ({ IDL }) => {
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'setProcessSelector' : IDL.Func([ProcessSelector], [], []),
     'updateAvailableProcesses' : IDL.Func([IDL.Vec(IDL.Text)], [], []),
+    'updateModSettings' : IDL.Func([ModSettings], [], []),
   });
 };
 
